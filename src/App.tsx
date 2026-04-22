@@ -862,7 +862,6 @@ function InteractiveTerminal() {
           value={input}
           onChange={(e) => setInput(e.target.value)}
           className="bg-transparent border-none outline-none text-ash-100 flex-1"
-          autoFocus
           autoComplete="off"
           spellCheck="false"
         />
