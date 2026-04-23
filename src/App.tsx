@@ -6,6 +6,7 @@ function App() {
   const [isDarkMode, setIsDarkMode] = useState(true)
   const [cursorPos, setCursorPos] = useState({ x: 0, y: 0 })
   const [isHovering, setIsHovering] = useState(false)
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
   // Initialize theme
   useEffect(() => {
@@ -124,7 +125,7 @@ function App() {
                 Ganga Bharath
               </div>
 
-              {/* Navigation Links - Right */}
+              {/* Navigation Links - Right (desktop only) */}
               <div className="hidden md:flex items-center space-x-6 absolute right-6">
                 <a href="#skills" className="text-ash-600 dark:text-ash-400 hover:text-ash-900 dark:hover:text-ash-100 transition-colors duration-200 font-medium text-sm">
                   Skills
@@ -138,12 +139,38 @@ function App() {
                   aria-label="Toggle dark mode"
                 >
                   {isDarkMode ? (
-                    <svg className="w-5 h-5 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
-                      <path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" />
+                    <svg className="w-5 h-5 text-yellow-400" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" /></svg>
+                  ) : (
+                    <svg className="w-5 h-5 text-ash-700" fill="currentColor" viewBox="0 0 20 20"><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z" /></svg>
+                  )}
+                </button>
+              </div>
+
+              {/* Mobile right controls */}
+              <div className="md:hidden flex items-center gap-1 absolute right-4">
+                <button
+                  onClick={toggleDarkMode}
+                  className="p-2 rounded-full hover:bg-ash-200 dark:hover:bg-ash-800 transition-colors"
+                  aria-label="Toggle dark mode"
+                >
+                  {isDarkMode ? (
+                    <svg className="w-5 h-5 text-yellow-400" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" /></svg>
+                  ) : (
+                    <svg className="w-5 h-5 text-ash-700" fill="currentColor" viewBox="0 0 20 20"><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z" /></svg>
+                  )}
+                </button>
+                <button
+                  onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+                  className="p-2 rounded-full hover:bg-ash-200 dark:hover:bg-ash-800 transition-colors"
+                  aria-label="Toggle menu"
+                >
+                  {mobileMenuOpen ? (
+                    <svg className="w-5 h-5 text-ash-900 dark:text-ash-100" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                     </svg>
                   ) : (
-                    <svg className="w-5 h-5 text-ash-700" fill="currentColor" viewBox="0 0 20 20">
-                      <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z" />
+                    <svg className="w-5 h-5 text-ash-900 dark:text-ash-100" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
                     </svg>
                   )}
                 </button>
@@ -151,6 +178,24 @@ function App() {
             </div>
           </div>
         </div>
+
+        {/* Mobile Menu Drawer */}
+        {mobileMenuOpen && (
+          <div className="md:hidden mx-4 mt-2 nav-blur border rounded-2xl shadow-xl overflow-hidden">
+            <div className="flex flex-col py-2">
+              {['about', 'projects', 'skills', 'contact'].map((section) => (
+                <a
+                  key={section}
+                  href={`#${section}`}
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="px-6 py-4 text-ash-700 dark:text-ash-300 hover:text-ash-900 dark:hover:text-ash-100 hover:bg-ash-100/50 dark:hover:bg-ash-800/50 font-medium capitalize transition-colors border-b border-ash-200/30 dark:border-ash-700/30 last:border-0"
+                >
+                  {section.charAt(0).toUpperCase() + section.slice(1)}
+                </a>
+              ))}
+            </div>
+          </div>
+        )}
       </nav>
 
       {/* Hero Section */}
@@ -306,7 +351,7 @@ function App() {
               {/* Badges of Expertise - Separate Row */}
               <div className="mt-16">
                 <h3 className="text-2xl font-bold text-ash-900 dark:text-ash-100 mb-8">Badges of Expertise</h3>
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-8">
                   {[
                     {
                       name: 'Oracle OCI AI Foundations',
@@ -339,7 +384,7 @@ function App() {
                       href={cert.link}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="project-card p-8 rounded-2xl group/cert hover:border-ash-900/50 dark:hover:border-ash-100/50 transition-all duration-300 block text-center"
+                      className="project-card p-4 sm:p-8 rounded-2xl group/cert hover:border-ash-900/50 dark:hover:border-ash-100/50 transition-all duration-300 block text-center"
                     >
                       <div className="flex flex-col items-center space-y-6">
                         <div className="w-16 h-16 rounded-full bg-ash-100 dark:bg-ash-800 flex items-center justify-center text-3xl group-hover/cert:scale-110 group-hover/cert:rotate-12 transition-all duration-500 shadow-inner">
@@ -492,7 +537,7 @@ function App() {
                 href="https://wear-your-style.vercel.app"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="lg:col-span-7 overflow-hidden rounded-2xl project-card h-[400px] block relative"
+                className="lg:col-span-7 overflow-hidden rounded-2xl project-card h-56 sm:h-72 lg:h-[400px] block relative"
               >
                 <img
                   src="/projects-wear.png"
