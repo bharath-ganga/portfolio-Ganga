@@ -191,9 +191,9 @@ function App() {
       </section>
 
       {/* About & Experience Section */}
-      <section id="about" className="py-20 lg:py-32 reveal-hidden">
+      <section id="about" className="py-16 lg:py-32 reveal-hidden">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid lg:grid-cols-2 gap-16 items-start">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16 items-start">
             <div className="space-y-8 animate-fadeIn">
               <div className="flex items-center gap-2 mb-4 animate-fadeIn">
                 <span className="relative flex h-3 w-3">
@@ -225,7 +225,7 @@ function App() {
                     target="_blank"
                     className="inline-flex items-center gap-2 bg-ash-900 dark:bg-ash-100 text-ash-50 dark:text-ash-900 px-6 py-2.5 rounded-full font-bold text-sm hover:scale-105 transition-all shadow-lg shadow-ash-900/10 dark:shadow-none"
                   >
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 0 1 -2 -2V5a2 2 0 0 1 2 -2h5.586a1 1 0 0 1 .707 .293l5.414 5.414a1 1 0 0 1 .293 .707V19a2 2 0 0 1 -2 2z" /></svg>
                     Download Resume
                   </a>
                   <div className="h-8 w-px bg-ash-200 dark:bg-ash-800 mx-2 hidden sm:block"></div>
@@ -238,13 +238,13 @@ function App() {
                     </a>
                     <a href="https://leetcode.com/u/GANGA_BHARATH/" target="_blank" rel="noopener noreferrer" className="p-2.5 rounded-full bg-white dark:bg-ash-800 border border-ash-200 dark:border-ash-700 hover:border-ash-900 dark:hover:border-ash-100 transition-colors group">
                       <svg className="w-5 h-5 opacity-60 group-hover:opacity-100 text-orange-500" viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M16.102 17.93l-2.697 2.607c-.466.467-1.111.662-1.823.662s-1.357-.195-1.824-.662l-4.332-4.363c-.467-.467-.702-1.15-.702-1.863s.235-1.357.702-1.824l4.332-4.363c.467-.467 1.112-.662 1.824-.662.712 0 1.357.195 1.823.662l2.697 2.606c.514.515 1.311.515 1.826 0 .515-.515.515-1.346 0-1.862L15.228 5.67c-1.026-1.027-2.457-1.446-4.04-1.446-1.584 0-3.014.419-4.04 1.446L2.816 10.033c-1.027 1.027-1.446 2.458-1.446 4.041 0 1.583.419 3.014 1.446 4.041l4.332 4.363c1.026 1.027 2.456 1.446 4.04 1.446 1.583 0 3.013-.419 4.04-1.446l4.704-4.74c.515-.516.515-1.347 0-1.863-.516-.515-1.312-.515-1.826 0l-.004.004zM22.215 13.917c-.515-.516-1.312-.516-1.827 0l-2.73 2.734c-.514.515-.514 1.346 0 1.862.258.258.597.387.937.387s.679-.129.936-.387l2.684-2.687c.515-.516.515-1.347 0-1.863l-.004-.004z"></path>
+                        <path d="M16.102 17.93l-2.697 2.607c-.466.467-1.111.662-1.823.662s-1.357-.195-1.824-.662l-4.332-4.363c-.467-.467-.702-1.15-.702-1.863s.235-1.357.702-1.824l4.332-4.363c.467-.467 1.112-.662 1.824-.662.712 0 1.357.195 1.823.662l2.697 2.606c.514.515 1.311.515 1.826 0 .515-.515.515-1.346 0-1.862L15.228 5.67c-1.026-1.027-2.457-1.446-4.04-1.446-1.584 0-3.014.419-4.04 1.446L2.816 10.033c-1.027 1.027-1.446 2.458-1.446 4.041 0 1.583.419 3.014 1.446 4.041l4.332 4.363c1.026 1.027 2.456 1.446 4.04 1.446 1.583 0 3.013-.419 4.04-1.446l4.704-4.74c.515-.516.515-1.347 0-1.863-.516-.515-1.312-.515-1.826 0l-.004 .004zM22.215 13.917c-.515-.516-1.312-.516-1.827 0l-2.73 2.734c-.514.515-.514 1.346 0 1.862.258.258.597.387.937.387s.679-.129.936-.387l2.684-2.687c.515-.516.515-1.347 0-1.863l-.004 -.004z"></path>
                       </svg>
                     </a>
                   </div>
                 </div>
 
-                <div className="pt-8 grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <div className="pt-6 grid grid-cols-3 gap-3">
                   <div className="project-card p-4 rounded-xl flex items-center gap-4">
                     <div className="w-10 h-10 rounded-full bg-ash-100 dark:bg-ash-800 flex items-center justify-center text-xl">🚀</div>
                     <div>
@@ -317,7 +317,7 @@ function App() {
               {/* Badges of Expertise - Separate Row */}
               <div className="mt-16">
                 <h3 className="text-2xl font-bold text-ash-900 dark:text-ash-100 mb-8">Badges of Expertise</h3>
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-8">
+                <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                   {[
                     {
                       name: 'Oracle OCI AI Foundations',
@@ -372,7 +372,7 @@ function App() {
               <div className="project-card rounded-2xl p-6 mt-12 bg-gradient-to-br from-ash-50 to-ash-100 dark:from-ash-900/40 dark:to-ash-800/40 border-ash-200 dark:border-ash-700/50">
                 <div className="flex items-center justify-between mb-6">
                   <h4 className="font-bold flex items-center gap-2">
-                    <svg className="w-5 h-5 text-orange-500" viewBox="0 0 24 24" fill="currentColor"><path d="M13.483 0a1.374 1.374 0 00-.961.414l-4.377 4.406 4.377 4.406a1.374 1.374 0 101.922-1.962l-2.45-2.428 2.45-2.427a1.374 1.374 0 00-.961-2.41zm-6.966 4.406a1.374 1.374 0 00-1.374 1.374V15a1.374 1.374 0 00.961 1.312l4.377 1.403v-4.406a1.374 1.374 0 10-2.748 0v2.428l-2.45-.786V5.78a1.374 1.374 0 00-1.14-.1.403L6.517 4.406zM24 13.483a1.374 1.374 0 00-.414-.961l-4.406-4.377-4.406 4.377a1.374 1.374 0 101.962 1.922l2.428-2.45 2.427 2.45A1.374 1.374 0 0024 13.483zM0 13.483a1.374 1.374 0 00.414.961l4.406 4.377 4.406-4.377a1.374 1.374 0 10-1.962-1.922l-2.428 2.45-2.427-2.45A1.374 1.374 0 000 13.483z" /></svg>
+                    <svg className="w-5 h-5 text-orange-500" viewBox="0 0 24 24" fill="currentColor"><path d="M13.483 0a1.374 1.374 0 0 0 -.961.414l-4.377 4.406 4.377 4.406a1.374 1.374 0 1 0 1.922 -1.962l-2.45-2.428 2.45-2.427a1.374 1.374 0 0 0 -.961-2.41zm-6.966 4.406a1.374 1.374 0 0 0 -1.374 1.374V15a1.374 1.374 0 0 0 .961 1.312l4.377 1.403v-4.406a1.374 1.374 0 1 0 -2.748 0v2.428l-2.45-.786V5.78a1.374 1.374 0 0 0 -1.14 -.1.403L6.517 4.406zM24 13.483a1.374 1.374 0 0 0 -.414-.961l-4.406-4.377-4.406 4.377a1.374 1.374 0 1 0 1.962 1.922l2.428-2.45 2.427 2.45A1.374 1.374 0 0 0 24 13.483zM0 13.483a1.374 1.374 0 0 0 .414.961l4.406 4.377 4.406-4.377a1.374 1.374 0 1 0 -1.962-1.922l-2.428 2.45-2.427-2.45A1.374 1.374 0 0 0 0 13.483z" /></svg>
                     LeetCode Stats
                   </h4>
                   <a
@@ -403,7 +403,7 @@ function App() {
               {/* Digital Toolkit */}
               <div className="mt-12">
                 <h3 className="text-xl font-bold text-ash-900 dark:text-ash-100 mb-6 tracking-tight">Digital Toolkit</h3>
-                <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+                <div className="grid grid-cols-4 gap-3">
                   {[
                     { name: 'React.js', icon: '⚛️' },
                     { name: 'Tailwind', icon: '🌊' },
@@ -498,12 +498,12 @@ function App() {
 
           <div className="space-y-20">
             {/* WearYourStyle - Featured */}
-            <div className="group grid lg:grid-cols-12 gap-8 items-center">
+            <div className="group grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-center">
               <a
                 href="https://wear-your-style.vercel.app"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="lg:col-span-7 overflow-hidden rounded-2xl project-card h-56 sm:h-72 lg:h-[400px] block relative"
+                className="col-span-1 lg:col-span-7 overflow-hidden rounded-2xl project-card h-48 sm:h-72 lg:h-[400px] block relative"
               >
                 <img
                   src="/projects-wear.png"
@@ -516,7 +516,7 @@ function App() {
                   </div>
                 </div>
               </a>
-              <div className="lg:col-span-5 space-y-6">
+              <div className="col-span-1 lg:col-span-5 space-y-6">
                 <div className="text-sm font-bold text-ash-500 uppercase tracking-widest">Featured Project</div>
                 <h3 className="text-3xl font-bold text-ash-900 dark:text-ash-100">
                   WearYourStyle
@@ -546,7 +546,7 @@ function App() {
                     rel="noopener noreferrer"
                     className="flex items-center gap-2 text-sm font-bold opacity-60 hover:opacity-100 transition-opacity hover:text-ash-900 dark:hover:text-ash-100"
                   >
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" /></svg>
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 6H6a2 2 0 0 0 -2 2v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-4M14 4h6m0 0v6m0 -6L10 14" /></svg>
                     LIVE DEMO →
                   </a>
                 </div>
@@ -554,7 +554,7 @@ function App() {
             </div>
 
             {/* Grid for other projects */}
-            <div className="grid md:grid-cols-2 gap-12">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-12">
               {/* Expense Tracker */}
               <div className="space-y-6 group">
                 <a
@@ -594,7 +594,7 @@ function App() {
                     rel="noopener noreferrer"
                     className="flex items-center gap-2 text-sm font-bold opacity-60 hover:opacity-100 transition-opacity hover:text-ash-900 dark:hover:text-ash-100"
                   >
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" /></svg>
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 6H6a2 2 0 0 0 -2 2v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-4M14 4h6m0 0v6m0 -6L10 14" /></svg>
                     LIVE DEMO →
                   </a>
                 </div>
@@ -649,7 +649,7 @@ function App() {
             </h2>
             <p className="text-ash-600 dark:text-ash-400 text-lg">Tools and languages I use to bring ideas to life.</p>
           </div>
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
             {[
               { title: 'Languages', skills: ['TypeScript', 'JavaScript', 'Java', 'Python'] },
               { title: 'Frontend', skills: ['React', 'Next.js', 'Expo', 'Tailwind CSS'] },
@@ -735,7 +735,7 @@ function App() {
                       <>
                         <svg className="animate-spin -ml-1 mr-3 h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                           <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 0 1 8 -8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 0 1 4 12H0c0 3.042 1.135 5.824 3 7.938l3 -2.647z"></path>
                         </svg>
                         Sending...
                       </>
@@ -750,7 +750,7 @@ function App() {
                   <div className="text-center animate-fadeIn">
                     <div className="inline-flex items-center px-4 py-2 rounded-lg bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200">
                       <svg className="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
-                        <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                        <path fillRule="evenodd" d="M10 18a8 8 0 1 0 0 -16 8 8 0 0 0 0 16zm3.707 -9.293a1 1 0 0 0 -1.414 -1.414L9 10.586 7.707 9.293a1 1 0 0 0 -1.414 1.414l2 2a1 1 0 0 0 1.414 0l4 -4z" clipRule="evenodd" />
                       </svg>
                       Message sent successfully!
                     </div>
@@ -761,7 +761,7 @@ function App() {
                   <div className="text-center animate-fadeIn">
                     <div className="inline-flex items-center px-4 py-2 rounded-lg bg-red-100 dark:bg-red-900 text-red-800 dark:text-red-200">
                       <svg className="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
-                        <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+                        <path fillRule="evenodd" d="M10 18a8 8 0 1 0 0 -16 8 8 0 0 0 0 16zM8.707 7.293a1 1 0 0 0 -1.414 1.414L8.586 10l-1.293 1.293a1 1 0 1 0 1.414 1.414L10 11.414l1.293 1.293a1 1 0 0 0 1.414 -1.414L11.414 10l1.293 -1.293a1 1 0 0 0 -1.414 -1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
                       </svg>
                       Something went wrong. Please try again.
                     </div>

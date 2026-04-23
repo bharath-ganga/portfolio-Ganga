@@ -9,7 +9,8 @@
 
   /* Always dark background — the site is dark-first */
   body {
-    @apply bg-ash-950 text-ash-100 antialiased overflow-x-hidden selection:bg-ash-100 selection:text-ash-950;
+    @apply bg-ash-950 text-ash-100 antialiased selection:bg-ash-100 selection:text-ash-950;
+    min-width: 320px;
     background-image: 
       radial-gradient(at 0% 0%, hsla(253,16%,7%,1) 0, transparent 50%), 
       radial-gradient(at 50% 0%, hsla(225,39%,30%,1) 0, transparent 50%), 
