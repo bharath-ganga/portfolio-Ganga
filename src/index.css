@@ -6,16 +6,22 @@
   html {
     scroll-behavior: smooth;
   }
-  
+
+  /* Always dark background — the site is dark-first */
   body {
-    @apply bg-ash-50 text-ash-900 antialiased overflow-x-hidden selection:bg-ash-900 selection:text-ash-50;
-    cursor: none;
+    @apply bg-ash-950 text-ash-100 antialiased overflow-x-hidden selection:bg-ash-100 selection:text-ash-950;
     background-image: 
       radial-gradient(at 0% 0%, hsla(253,16%,7%,1) 0, transparent 50%), 
       radial-gradient(at 50% 0%, hsla(225,39%,30%,1) 0, transparent 50%), 
       radial-gradient(at 100% 0%, hsla(339,49%,30%,1) 0, transparent 50%);
     background-attachment: fixed;
     background-size: 100% 100%;
+  }
+
+  @media (pointer: fine) {
+    body {
+      cursor: none;
+    }
   }
 
   body::before {
@@ -30,48 +36,23 @@
     pointer-events: none;
     background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
   }
-  
-  @media (prefers-color-scheme: dark) {
-    body {
-      @apply bg-ash-950 text-ash-100;
-      background-image: 
-        radial-gradient(at 0% 0%, hsla(220, 30%, 5%, 1) 0, transparent 50%), 
-        radial-gradient(at 100% 0%, hsla(220, 30%, 10%, 1) 0, transparent 50%);
-    }
-  }
 }
 
 @layer components {
+  /* Always dark nav */
   .nav-blur {
-    @apply bg-white/70 backdrop-blur-md border border-white/20;
-    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.05);
+    @apply bg-ash-900/40 border-ash-700/30 border backdrop-blur-md;
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.4);
   }
   
-  @media (prefers-color-scheme: dark) {
-    .nav-blur {
-      @apply bg-ash-900/40 border-ash-700/30;
-      box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.4);
-    }
-  }
-  
+  /* Always dark cards */
   .project-card {
-    @apply bg-white/70 backdrop-blur-sm border border-ash-200/50 hover:border-ash-400 hover:-translate-y-1 transition-all duration-300;
+    @apply bg-ash-800/20 backdrop-blur-sm border border-ash-700/30 hover:border-ash-500/50 hover:bg-ash-800/40 hover:-translate-y-1 transition-all duration-300;
   }
   
-  @media (prefers-color-scheme: dark) {
-    .project-card {
-      @apply bg-ash-800/20 border-ash-700/30 hover:border-ash-500/50 hover:bg-ash-800/40;
-    }
-  }
-  
+  /* Always dark skill tags */
   .skill-tag {
-    @apply bg-ash-100/50 backdrop-blur-sm text-ash-700 border border-ash-200/50 hover:scale-105 transition-transform;
-  }
-  
-  @media (prefers-color-scheme: dark) {
-    .skill-tag {
-      @apply bg-ash-800/40 text-ash-300 border-ash-700/50 hover:border-ash-500/50;
-    }
+    @apply bg-ash-800/40 backdrop-blur-sm text-ash-300 border border-ash-700/50 hover:border-ash-500/50 hover:scale-105 transition-transform;
   }
 
   .interactive-bg {
@@ -154,7 +135,9 @@
     transform: translateY(0);
   }
 
-  a, button {
-    cursor: none;
+  @media (pointer: fine) {
+    a, button {
+      cursor: none;
+    }
   }
 }
