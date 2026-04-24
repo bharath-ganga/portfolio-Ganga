@@ -679,7 +679,7 @@ function App() {
               { title: 'Backend', skills: ['Node.js', 'Bun.js', 'Fastify', 'Express', 'Flask'] },
               { title: 'Databases', skills: ['MongoDB', 'PostgreSQL', 'MySQL', 'Redis'] },
               { title: 'Tools & Cloud', skills: ['Git', 'Docker', 'Kubernetes', 'OpenTelemetry', 'AWS', 'Vercel', 'Oracle OCI'] },
-              { title: 'Currently Learning', skills: ['Deep Learning'] }
+              { title: 'Currently Learning', skills: ['Machine Learning'] }
             ].map((cat, i) => (
               <div key={i} className="project-card p-6 rounded-2xl space-y-4">
                 <h3 className="text-lg font-bold text-ash-900 dark:text-ash-100 border-b border-ash-200 dark:border-ash-800 pb-2">{cat.title}</h3>
