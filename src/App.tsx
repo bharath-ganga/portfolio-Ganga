@@ -205,8 +205,9 @@ function App() {
               <a href="#projects" className="inline-flex items-center justify-center bg-ash-900 dark:bg-ash-100 text-ash-50 dark:text-ash-900 px-8 py-3 rounded-lg font-medium hover:bg-ash-800 dark:hover:bg-ash-200 transition-colors w-full sm:w-auto">
                 View Projects
               </a>
-              <a href="#contact" className="inline-flex items-center justify-center border border-ash-300 dark:border-ash-700 text-ash-900 dark:text-ash-100 px-8 py-3 rounded-lg font-medium hover:bg-ash-100 dark:hover:bg-ash-800 transition-colors w-full sm:w-auto">
-                Get In Touch
+              <a href="/Ganga_Bharath_Resume.pdf" target="_blank" className="inline-flex items-center justify-center border border-ash-300 dark:border-ash-700 text-ash-900 dark:text-ash-100 px-8 py-3 rounded-lg font-medium hover:bg-ash-100 dark:hover:bg-ash-800 transition-colors w-full sm:w-auto gap-2">
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 0 1 -2 -2V5a2 2 0 0 1 2 -2h5.586a1 1 0 0 1 .707 .293l5.414 5.414a1 1 0 0 1 .293 .707V19a2 2 0 0 1 -2 2z" /></svg>
+                Resume
               </a>
             </div>
           </div>
@@ -244,7 +245,7 @@ function App() {
                 {/* Social & Resume Bar */}
                 <div className="flex flex-wrap items-center gap-4 pt-4">
                   <a
-                    href="/resume (2).pdf"
+                    href="/Ganga_Bharath_Resume.pdf"
                     target="_blank"
                     className="inline-flex items-center gap-2 bg-ash-900 dark:bg-ash-100 text-ash-50 dark:text-ash-900 px-6 py-2.5 rounded-full font-bold text-sm hover:scale-105 transition-all shadow-lg shadow-ash-900/10 dark:shadow-none"
                   >
