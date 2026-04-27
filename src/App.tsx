@@ -366,7 +366,7 @@ function App() {
                     {
                       name: 'Empowerment & Employability',
                       issuer: 'Wadhwani Foundation',
-                      link: 'https://drive.google.com/drive/folders/1ZY4yuHVTopdK-r5uGFv6m6NaW6t8OmHZ'
+                      link: 'https://drive.google.com/file/d/1KWvO73iLc2-oDhe1Y6rwtvASQclPx1S8/view?usp=sharing'
                     }
                   ].map((cert, idx) => (
                     <a
@@ -956,7 +956,7 @@ function AnimatedCounter({ value, duration = 2000 }: { value: number, duration?:
         setHasAnimated(true)
       }
     }, { threshold: 0.1 })
-    
+
     if (nodeRef.current) observer.observe(nodeRef.current)
     return () => observer.disconnect()
   }, [hasAnimated])
