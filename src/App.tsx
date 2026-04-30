@@ -194,8 +194,8 @@ function App() {
       <section className="pt-28 pb-16 sm:pt-36 sm:pb-20">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-4xl mx-auto reveal-hidden">
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-bold text-ash-900 dark:text-ash-100 leading-tight">
-              <span className="text-gradient">Ganga Bharath</span>
+            <h1 className="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-bold text-ash-900 dark:text-ash-100 leading-tight flex flex-col items-center justify-center">
+              <TypewriterName />
               <span className="block text-ash-600 dark:text-ash-400 mt-2 min-h-[1.2em]">
                 <RoleSwitcher />
               </span>
@@ -972,6 +972,28 @@ function CurrentTime() {
         <span>{month} {day}</span>
       </div>
     </div>
+  )
+}
+
+function TypewriterName({ text = "Ganga Bharath" }: { text?: string }) {
+  const [displayedText, setDisplayedText] = useState('')
+  const [index, setIndex] = useState(0)
+
+  useEffect(() => {
+    if (index < text.length) {
+      const timeout = setTimeout(() => {
+        setDisplayedText(prev => prev + text[index])
+        setIndex(prev => prev + 1)
+      }, 120)
+      return () => clearTimeout(timeout)
+    }
+  }, [index, text])
+
+  return (
+    <span className="inline-flex items-center justify-center">
+      <span className="text-gradient">{displayedText}</span>
+      <span className="w-1.5 sm:w-2 h-[0.85em] bg-ash-900 dark:bg-ash-100 ml-2 rounded-sm animate-pulse opacity-80"></span>
+    </span>
   )
 }
 
