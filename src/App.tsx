@@ -992,7 +992,6 @@ function TypewriterName({ text = "Ganga Bharath" }: { text?: string }) {
   return (
     <span className="inline-flex items-center justify-center">
       <span className="text-gradient">{displayedText}</span>
-      <span className="w-1.5 sm:w-2 h-[0.85em] bg-ash-900 dark:bg-ash-100 ml-2 rounded-sm animate-pulse opacity-80"></span>
     </span>
   )
 }
