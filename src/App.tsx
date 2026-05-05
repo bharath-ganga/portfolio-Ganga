@@ -6,15 +6,42 @@ function App() {
   const [cursorPos, setCursorPos] = useState({ x: 0, y: 0 })
   const [isHovering, setIsHovering] = useState(false)
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
-  const [isDarkMode, setIsDarkMode] = useState(true)
 
+  // Live stats state
+  const [leetcodeStats, setLeetcodeStats] = useState({ easy: 120, medium: 85, hard: 15 })
+  const [githubStats, setGithubStats] = useState({ repos: 15, commits: 214 })
+
+  // Fetch live stats
   useEffect(() => {
-    if (isDarkMode) {
-      document.documentElement.classList.add('dark')
-    } else {
-      document.documentElement.classList.remove('dark')
-    }
-  }, [isDarkMode])
+    // Fetch LeetCode stats
+    fetch('https://leetcode-api-faisalshohag.vercel.app/GANGA_BHARATH')
+      .then(res => res.json())
+      .then(data => {
+        if (data && data.easySolved !== undefined) {
+          setLeetcodeStats({
+            easy: data.easySolved,
+            medium: data.mediumSolved,
+            hard: data.hardSolved
+          })
+        }
+      })
+      .catch(err => console.error('Error fetching LeetCode stats:', err))
+
+    // Fetch GitHub Repositories count
+    fetch('https://api.github.com/users/bharath-ganga')
+      .then(res => res.json())
+      .then(data => {
+        if (data && data.public_repos !== undefined) {
+          setGithubStats(prev => ({ ...prev, repos: data.public_repos }))
+        }
+      })
+      .catch(err => console.error('Error fetching GitHub stats:', err))
+  }, [])
+
+  // Force dark mode
+  useEffect(() => {
+    document.documentElement.classList.add('dark')
+  }, [])
 
   // Custom Cursor Logic
   useEffect(() => {
@@ -133,24 +160,10 @@ function App() {
                 <a href="#contact" className="text-ash-400 hover:text-ash-100 transition-colors duration-200 font-medium text-sm">
                   Contact
                 </a>
-                <button
-                  onClick={() => setIsDarkMode(!isDarkMode)}
-                  className="p-1.5 rounded-full hover:bg-ash-200/20 dark:hover:bg-ash-800 transition-colors text-ash-600 dark:text-ash-400"
-                  aria-label="Toggle theme"
-                >
-                  {isDarkMode ? '🌞' : '🌙'}
-                </button>
               </div>
 
               {/* Mobile right controls */}
               <div className="md:hidden flex items-center gap-2 absolute right-4">
-                <button
-                  onClick={() => setIsDarkMode(!isDarkMode)}
-                  className="p-2 rounded-full hover:bg-ash-200/20 dark:hover:bg-ash-800 transition-colors text-ash-600 dark:text-ash-400"
-                  aria-label="Toggle theme"
-                >
-                  {isDarkMode ? '🌞' : '🌙'}
-                </button>
                 <button
                   onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
                   className="p-2 rounded-full hover:bg-ash-800 transition-colors"
@@ -413,15 +426,15 @@ function App() {
                 </div>
                 <div className="grid grid-cols-3 gap-4">
                   <div className="text-center">
-                    <div className="text-2xl font-bold text-green-500"><AnimatedCounter value={120} /></div>
+                    <div className="text-2xl font-bold text-green-500"><AnimatedCounter value={leetcodeStats.easy} /></div>
                     <div className="text-xs text-ash-500 uppercase tracking-wider mt-1">Easy</div>
                   </div>
                   <div className="text-center border-x border-ash-200 dark:border-ash-800">
-                    <div className="text-2xl font-bold text-yellow-500"><AnimatedCounter value={85} /></div>
+                    <div className="text-2xl font-bold text-yellow-500"><AnimatedCounter value={leetcodeStats.medium} /></div>
                     <div className="text-xs text-ash-500 uppercase tracking-wider mt-1">Medium</div>
                   </div>
                   <div className="text-center">
-                    <div className="text-2xl font-bold text-red-500"><AnimatedCounter value={15} /></div>
+                    <div className="text-2xl font-bold text-red-500"><AnimatedCounter value={leetcodeStats.hard} /></div>
                     <div className="text-xs text-ash-500 uppercase tracking-wider mt-1">Hard</div>
                   </div>
                 </div>
@@ -465,11 +478,11 @@ function App() {
                 </div>
                 <div className="grid grid-cols-2 gap-6">
                   <div>
-                    <div className="text-2xl font-bold font-mono"><AnimatedCounter value={214} />+</div>
+                    <div className="text-2xl font-bold font-mono"><AnimatedCounter value={githubStats.commits} />+</div>
                     <div className="text-[10px] text-white/40 uppercase tracking-widest mt-1">Commits</div>
                   </div>
                   <div>
-                    <div className="text-2xl font-bold font-mono"><AnimatedCounter value={15} /></div>
+                    <div className="text-2xl font-bold font-mono"><AnimatedCounter value={githubStats.repos} /></div>
                     <div className="text-[10px] text-white/40 uppercase tracking-widest mt-1">Repositories</div>
                   </div>
                   <div className="col-span-2">
