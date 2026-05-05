@@ -9,7 +9,7 @@ function App() {
   const [cursorPos, setCursorPos] = useState({ x: 0, y: 0 })
   const [isHovering, setIsHovering] = useState(false)
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
-  const [selectedProject, setSelectedProject] = useState<any>(null)
+  const [selectedProject, setSelectedProject] = useState<Record<string, any> | null>(null)
 
   // Live stats state
   const [leetcodeStats, setLeetcodeStats] = useState({ easy: 120, medium: 85, hard: 15 })
@@ -105,7 +105,7 @@ function App() {
       } else {
         setFormStatus('error')
       }
-    } catch (error) {
+    } catch {
       setFormStatus('error')
     } finally {
       setIsSubmitting(false)
@@ -1058,6 +1058,7 @@ function RoleSwitcher() {
       }, 500)
     }, 3000)
     return () => clearInterval(interval)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   return (
