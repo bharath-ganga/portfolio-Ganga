@@ -1,7 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-// @ts-ignore
-import GitHubCalendar from 'react-github-calendar'
+import { GitHubCalendar } from 'react-github-calendar'
 import { X, ExternalLink, MonitorPlay, Music } from 'lucide-react'
 
 function App() {
