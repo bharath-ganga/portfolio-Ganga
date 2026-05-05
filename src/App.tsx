@@ -1,4 +1,8 @@
 import { useState, useEffect, useRef } from 'react'
+import { motion, AnimatePresence } from 'framer-motion'
+// @ts-ignore
+import GitHubCalendar from 'react-github-calendar'
+import { X, ExternalLink, MonitorPlay, Music } from 'lucide-react'
 
 function App() {
   const [formStatus, setFormStatus] = useState('')
@@ -6,6 +10,7 @@ function App() {
   const [cursorPos, setCursorPos] = useState({ x: 0, y: 0 })
   const [isHovering, setIsHovering] = useState(false)
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+  const [selectedProject, setSelectedProject] = useState<any>(null)
 
   // Live stats state
   const [leetcodeStats, setLeetcodeStats] = useState({ easy: 120, medium: 85, hard: 15 })
@@ -462,40 +467,32 @@ function App() {
                 </div>
               </div>
 
-              {/* GitHub Stats Card */}
-              <div className="project-card rounded-2xl p-6 mt-12 bg-gradient-to-br from-ash-900 to-ash-950 text-white border-white/5 overflow-hidden relative">
-                <div className="absolute -right-8 -top-8 w-32 h-32 bg-ash-100/5 rounded-full blur-3xl"></div>
+              {/* GitHub Contribution Calendar */}
+              <div className="project-card rounded-2xl p-6 mt-12 bg-ash-900 border border-ash-800 overflow-hidden relative group/gh">
                 <div className="flex items-center justify-between mb-8">
                   <div className="flex items-center gap-3">
                     <div className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center">
-                      <svg className="w-6 h-6" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z" /></svg>
+                      <svg className="w-5 h-5 text-white" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z" /></svg>
                     </div>
                     <div>
-                      <h4 className="font-bold text-sm">GitHub Productivity</h4>
-                      <p className="text-[10px] text-white/40 uppercase tracking-widest font-mono">Syncing active...</p>
+                      <h4 className="font-bold text-sm text-white">GitHub Productivity</h4>
+                      <p className="text-[10px] text-white/40 uppercase tracking-widest font-mono">Live Activity Sync</p>
                     </div>
                   </div>
-                </div>
-                <div className="grid grid-cols-2 gap-6">
-                  <div>
-                    <div className="text-2xl font-bold font-mono"><AnimatedCounter value={githubStats.commits} />+</div>
-                    <div className="text-[10px] text-white/40 uppercase tracking-widest mt-1">Commits</div>
-                  </div>
-                  <div>
-                    <div className="text-2xl font-bold font-mono"><AnimatedCounter value={githubStats.repos} /></div>
+                  <div className="text-right">
+                    <div className="text-2xl font-bold font-mono text-white"><AnimatedCounter value={githubStats.repos} /></div>
                     <div className="text-[10px] text-white/40 uppercase tracking-widest mt-1">Repositories</div>
                   </div>
-                  <div className="col-span-2">
-                    <div className="h-2 w-full bg-white/5 rounded-full overflow-hidden flex gap-1">
-                      <div className="h-full bg-yellow-500 w-[60%]"></div>
-                      <div className="h-full bg-blue-500 w-[25%]"></div>
-                      <div className="h-full bg-green-500 w-[15%]"></div>
-                    </div>
-                    <div className="flex justify-between mt-2 text-[8px] text-white/30 uppercase tracking-tighter">
-                      <span>JavaScript 60%</span>
-                      <span>Java 25%</span>
-                      <span>Python 15%</span>
-                    </div>
+                </div>
+                <div className="w-full overflow-x-auto pb-2 scrollbar-thin scrollbar-thumb-ash-700 scrollbar-track-transparent">
+                  <div className="min-w-[700px]">
+                    <GitHubCalendar
+                      username="bharath-ganga"
+                      colorScheme="dark"
+                      blockSize={12}
+                      blockMargin={4}
+                      fontSize={12}
+                    />
                   </div>
                 </div>
               </div>
@@ -539,11 +536,22 @@ function App() {
           <div className="space-y-20">
             {/* WearYourStyle - Featured */}
             <div className="group grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-center">
-              <a
-                href="https://wear-your-style.vercel.app"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="col-span-1 lg:col-span-7 overflow-hidden rounded-2xl project-card h-48 sm:h-72 lg:h-[400px] block relative"
+              <div
+                onClick={() => setSelectedProject({
+                  title: 'WearYourStyle',
+                  description: 'An AI-Powered Fashion Marketplace featuring real-time virtual try-on. Used MediaPipe and OpenCV to overlay garments on user pose data with high precision.',
+                  image: '/projects-wear.png',
+                  skills: ['React', 'Node.js', 'Python', 'OpenCV', 'MediaPipe'],
+                  github: 'https://github.com/bharath-ganga/WearYourStyle-new',
+                  demo: 'https://wear-your-style.vercel.app',
+                  details: [
+                    'Real-time virtual try-on capability using OpenCV and MediaPipe',
+                    'Full-stack architecture with React frontend and Node.js backend',
+                    'High precision pose detection for accurate garment mapping',
+                    'Integrated secure payment and user authentication'
+                  ]
+                })}
+                className="col-span-1 lg:col-span-7 overflow-hidden rounded-2xl project-card h-48 sm:h-72 lg:h-[400px] block relative cursor-pointer"
               >
                 <img
                   src="/projects-wear.png"
@@ -551,11 +559,11 @@ function App() {
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
                 />
                 <div className="absolute inset-0 bg-ash-900/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                  <div className="px-6 py-3 bg-white/10 backdrop-blur-md rounded-full text-white font-bold border border-white/20">
-                    View Live Project
+                  <div className="px-6 py-3 bg-white/10 backdrop-blur-md rounded-full text-white font-bold border border-white/20 shadow-lg">
+                    View Project Details
                   </div>
                 </div>
-              </a>
+              </div>
               <div className="col-span-1 lg:col-span-5 space-y-6">
                 <div className="text-sm font-bold text-ash-500 uppercase tracking-widest">Featured Project</div>
                 <h3 className="text-3xl font-bold text-ash-900 dark:text-ash-100">
@@ -597,11 +605,22 @@ function App() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-12">
               {/* Expense Tracker */}
               <div className="space-y-6 group">
-                <a
-                  href="https://expensivetracker-teal.vercel.app/"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="h-64 rounded-2xl project-card overflow-hidden block relative"
+                <div
+                  onClick={() => setSelectedProject({
+                    title: 'Expense Tracker',
+                    description: 'A full-stack finance tracking app with automated categorization and insightful dashboard visualizations.',
+                    image: '/projects-expense.png',
+                    skills: ['React', 'Node.js', 'MongoDB', 'Express', 'Chart.js'],
+                    github: 'https://github.com/bharath-ganga/expensivetracker_intern.git',
+                    demo: 'https://expensivetracker-teal.vercel.app/',
+                    details: [
+                      'Interactive dashboard with spending visualizations',
+                      'Automated expense categorization',
+                      'REST API built with Node.js and Express',
+                      'Secure data storage with MongoDB'
+                    ]
+                  })}
+                  className="h-64 rounded-2xl project-card overflow-hidden block relative cursor-pointer"
                 >
                   <img
                     src="/projects-expense.png"
@@ -609,11 +628,11 @@ function App() {
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
                   />
                   <div className="absolute inset-0 bg-ash-900/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                    <span className="px-4 py-2 bg-white/10 backdrop-blur-md rounded-full text-white text-sm font-bold border border-white/20">
-                      View Live Project
+                    <span className="px-4 py-2 bg-white/10 backdrop-blur-md rounded-full text-white text-sm font-bold border border-white/20 shadow-lg">
+                      View Project Details
                     </span>
                   </div>
-                </a>
+                </div>
                 <h3 className="text-2xl font-bold text-ash-900 dark:text-ash-100">Expense Tracker</h3>
                 <p className="text-ash-600 dark:text-ash-400">
                   A full-stack finance tracking app with automated categorization and insightful dashboard visualizations.
@@ -642,11 +661,22 @@ function App() {
 
               {/* SDN DDoS Detection */}
               <div className="space-y-6 group">
-                <a
-                  href="https://github.com/bharath-ganga/ML-Based-SDN-DDoS-Detection"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="h-64 rounded-2xl project-card overflow-hidden block relative"
+                <div
+                  onClick={() => setSelectedProject({
+                    title: 'SDN DDoS Detection',
+                    description: 'Research-based ML model for detecting network attacks in software-defined network architectures.',
+                    image: '/projects-cyber.png',
+                    skills: ['Python', 'Machine Learning', 'SDN', 'Networking', 'Scikit-learn'],
+                    github: 'https://github.com/bharath-ganga/ML-Based-SDN-DDoS-Detection',
+                    demo: null,
+                    details: [
+                      'Implemented multiple ML classifiers for network traffic analysis',
+                      'Designed to work within Software-Defined Networking controllers',
+                      'High accuracy in distinguishing legitimate traffic from DDoS floods',
+                      'Comprehensive research on network security architectures'
+                    ]
+                  })}
+                  className="h-64 rounded-2xl project-card overflow-hidden block relative cursor-pointer"
                 >
                   <img
                     src="/projects-cyber.png"
@@ -654,11 +684,11 @@ function App() {
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
                   />
                   <div className="absolute inset-0 bg-ash-900/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                    <span className="px-4 py-2 bg-white/10 backdrop-blur-md rounded-full text-white text-sm font-bold border border-white/20">
-                      View Research
+                    <span className="px-4 py-2 bg-white/10 backdrop-blur-md rounded-full text-white text-sm font-bold border border-white/20 shadow-lg">
+                      View Project Details
                     </span>
                   </div>
-                </a>
+                </div>
                 <h3 className="text-2xl font-bold text-ash-900 dark:text-ash-100">SDN DDoS Detection</h3>
                 <p className="text-ash-600 dark:text-ash-400">
                   Research-based ML model for detecting network attacks in software-defined network architectures.
@@ -691,17 +721,22 @@ function App() {
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
             {[
-              { title: 'Languages', skills: ['TypeScript', 'JavaScript', 'Java', 'Python'] },
-              { title: 'Frontend', skills: ['React', 'Next.js', 'Expo', 'Tailwind CSS'] },
-              { title: 'Backend', skills: ['Node.js', 'Bun.js', 'Fastify', 'Express', 'Flask'] },
-              { title: 'Databases', skills: ['MongoDB', 'PostgreSQL', 'MySQL', 'Redis'] },
-              { title: 'Tools & Cloud', skills: ['Git', 'Docker', 'Kubernetes', 'OpenTelemetry', 'AWS', 'Vercel', 'Oracle OCI'] },
-              { title: 'Currently Learning', skills: ['Machine Learning'] }
+              { title: 'Languages', skills: [{name: 'TypeScript', icon: 'typescript/typescript-original.svg'}, {name: 'JavaScript', icon: 'javascript/javascript-original.svg'}, {name: 'Java', icon: 'java/java-original.svg'}, {name: 'Python', icon: 'python/python-original.svg'}] },
+              { title: 'Frontend', skills: [{name: 'React', icon: 'react/react-original.svg'}, {name: 'Next.js', icon: 'nextjs/nextjs-original.svg'}, {name: 'Expo', icon: null}, {name: 'Tailwind CSS', icon: 'tailwindcss/tailwindcss-original.svg'}] },
+              { title: 'Backend', skills: [{name: 'Node.js', icon: 'nodejs/nodejs-original.svg'}, {name: 'Bun.js', icon: 'bun/bun-original.svg'}, {name: 'Fastify', icon: 'fastify/fastify-plain.svg'}, {name: 'Express', icon: 'express/express-original.svg'}, {name: 'Flask', icon: 'flask/flask-original.svg'}] },
+              { title: 'Databases', skills: [{name: 'MongoDB', icon: 'mongodb/mongodb-original.svg'}, {name: 'PostgreSQL', icon: 'postgresql/postgresql-original.svg'}, {name: 'MySQL', icon: 'mysql/mysql-original.svg'}, {name: 'Redis', icon: 'redis/redis-original.svg'}] },
+              { title: 'Tools & Cloud', skills: [{name: 'Git', icon: 'git/git-original.svg'}, {name: 'Docker', icon: 'docker/docker-original.svg'}, {name: 'Kubernetes', icon: 'kubernetes/kubernetes-plain.svg'}, {name: 'AWS', icon: 'amazonwebservices/amazonwebservices-original-wordmark.svg'}, {name: 'Vercel', icon: null}, {name: 'Oracle OCI', icon: null}] },
+              { title: 'Currently Learning', skills: [{name: 'Machine Learning', icon: null}] }
             ].map((cat, i) => (
-              <div key={i} className="project-card p-6 rounded-2xl space-y-4">
+              <div key={i} className="project-card p-6 rounded-2xl space-y-4 hover:-translate-y-1 transition-transform duration-300">
                 <h3 className="text-lg font-bold text-ash-900 dark:text-ash-100 border-b border-ash-200 dark:border-ash-800 pb-2">{cat.title}</h3>
                 <div className="flex flex-wrap gap-2">
-                  {cat.skills.map(s => <span key={s} className="skill-tag px-3 py-1 rounded-full text-xs">{s}</span>)}
+                  {cat.skills.map(s => (
+                    <span key={s.name} className="skill-tag px-3 py-1.5 rounded-full text-xs flex items-center gap-2 bg-ash-100/50 dark:bg-ash-800/50 border border-ash-200 dark:border-ash-700 hover:border-ash-400 dark:hover:border-ash-500 transition-colors">
+                      {s.icon && <img src={`https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/${s.icon}`} alt={s.name} className="w-4 h-4 object-contain" />}
+                      {s.name}
+                    </span>
+                  ))}
                 </div>
               </div>
             ))}
@@ -857,6 +892,78 @@ function App() {
           </div>
         </div>
       </footer>
+
+      {/* Project Modal */}
+      <AnimatePresence>
+        {selectedProject && (
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm"
+            onClick={() => setSelectedProject(null)}
+          >
+            <motion.div 
+              initial={{ scale: 0.95, opacity: 0, y: 20 }}
+              animate={{ scale: 1, opacity: 1, y: 0 }}
+              exit={{ scale: 0.95, opacity: 0, y: 20 }}
+              onClick={(e) => e.stopPropagation()}
+              className="bg-ash-900 border border-ash-800 rounded-3xl overflow-hidden max-w-4xl w-full max-h-[90vh] overflow-y-auto shadow-2xl relative"
+            >
+              <button 
+                onClick={() => setSelectedProject(null)}
+                className="absolute top-4 right-4 p-2 bg-black/50 text-white rounded-full hover:bg-black/80 transition-colors z-10"
+              >
+                <X className="w-5 h-5" />
+              </button>
+              <div className="relative h-64 sm:h-80">
+                <img src={selectedProject.image} alt={selectedProject.title} className="w-full h-full object-cover" />
+                <div className="absolute inset-0 bg-gradient-to-t from-ash-900 to-transparent"></div>
+                <div className="absolute bottom-6 left-6 right-6">
+                  <h3 className="text-3xl font-bold text-white mb-2">{selectedProject.title}</h3>
+                  <div className="flex flex-wrap gap-2">
+                    {selectedProject.skills.map((s: string) => <span key={s} className="px-3 py-1 bg-ash-800/80 text-white text-xs rounded-full border border-ash-700">{s}</span>)}
+                  </div>
+                </div>
+              </div>
+              <div className="p-6 sm:p-8 space-y-8">
+                <div>
+                  <h4 className="text-lg font-bold text-white mb-3 flex items-center gap-2">
+                    <MonitorPlay className="w-5 h-5 text-ash-400" />
+                    Overview
+                  </h4>
+                  <p className="text-ash-400 leading-relaxed">{selectedProject.description}</p>
+                </div>
+                {selectedProject.details && (
+                  <div>
+                    <h4 className="text-lg font-bold text-white mb-3 flex items-center gap-2">
+                      <Music className="w-5 h-5 text-ash-400" />
+                      Key Features
+                    </h4>
+                    <ul className="list-disc pl-5 text-ash-400 space-y-2 marker:text-ash-600">
+                      {selectedProject.details.map((d: string, i: number) => <li key={i}>{d}</li>)}
+                    </ul>
+                  </div>
+                )}
+                <div className="flex gap-4 pt-4 border-t border-ash-800">
+                  {selectedProject.github && (
+                    <a href={selectedProject.github} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 px-6 py-3 bg-ash-800 text-white rounded-xl hover:bg-ash-700 transition-colors font-medium">
+                      <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z" /></svg>
+                      Source Code
+                    </a>
+                  )}
+                  {selectedProject.demo && (
+                    <a href={selectedProject.demo} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 px-6 py-3 bg-white text-black rounded-xl hover:bg-ash-200 transition-colors font-medium hover:scale-105">
+                      <ExternalLink className="w-5 h-5" />
+                      Live Demo
+                    </a>
+                  )}
+                </div>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   )
 }
