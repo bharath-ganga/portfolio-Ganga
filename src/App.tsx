@@ -3,13 +3,23 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { GitHubCalendar } from 'react-github-calendar'
 import { X, ExternalLink, MonitorPlay, Music } from 'lucide-react'
 
+interface Project {
+  title: string;
+  description: string;
+  image: string;
+  skills: string[];
+  github?: string | null;
+  demo?: string | null;
+  details?: string[];
+}
+
 function App() {
   const [formStatus, setFormStatus] = useState('')
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [cursorPos, setCursorPos] = useState({ x: 0, y: 0 })
   const [isHovering, setIsHovering] = useState(false)
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
-  const [selectedProject, setSelectedProject] = useState<Record<string, any> | null>(null)
+  const [selectedProject, setSelectedProject] = useState<Project | null>(null)
 
   // Live stats state
   const [leetcodeStats, setLeetcodeStats] = useState({ easy: 120, medium: 85, hard: 15 })
