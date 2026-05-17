@@ -3,15 +3,10 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { GitHubCalendar } from 'react-github-calendar'
 import { X, ExternalLink, MonitorPlay, Music } from 'lucide-react'
 
-interface Project {
-  title: string;
-  description: string;
-  image: string;
-  skills: string[];
-  github?: string | null;
-  demo?: string | null;
-  details?: string[];
-}
+import { technicalSkills, digitalToolkit, hobbies } from './data/skills';
+import { certifications } from './data/certifications';
+import { educationHistory } from './data/experience';
+import { Project } from './data/types';
 
 function App() {
   const [formStatus, setFormStatus] = useState('')
@@ -347,24 +342,14 @@ function App() {
                 <span className="text-gradient">Professional Journey</span>
               </h3>
               <div className="space-y-8 relative before:absolute before:inset-y-0 before:left-2 before:w-0.5 before:bg-ash-200 dark:before:bg-ash-800">
-                <div className="relative pl-10 cursor-default group">
-                  <div className="absolute left-0 top-1.5 w-4 h-4 rounded-full border-4 border-ash-50 dark:border-ash-950 bg-ash-900 dark:bg-ash-100 group-hover:scale-125 transition-transform"></div>
-                  <div className="text-sm text-ash-500 mb-1">2023 — Present</div>
-                  <h4 className="text-lg font-semibold text-ash-900 dark:text-ash-100">B.Tech in Computer Science</h4>
-                  <p className="text-ash-600 dark:text-ash-400">VIT-AP University, Amaravati • CGPA: 7.96</p>
-                </div>
-                <div className="relative pl-10 cursor-default group">
-                  <div className="absolute left-0 top-1.5 w-4 h-4 rounded-full border-4 border-ash-50 dark:border-ash-950 bg-ash-400 dark:bg-ash-600 group-hover:scale-125 transition-transform"></div>
-                  <div className="text-sm text-ash-500 mb-1">2021 — 2023</div>
-                  <h4 className="text-lg font-semibold text-ash-900 dark:text-ash-100">Intermediate (MPC)</h4>
-                  <p className="text-ash-600 dark:text-ash-400">Govt Junior College • Percentage: 85.4%</p>
-                </div>
-                <div className="relative pl-10 cursor-default group">
-                  <div className="absolute left-0 top-1.5 w-4 h-4 rounded-full border-4 border-ash-50 dark:border-ash-950 bg-ash-400 dark:bg-ash-600 group-hover:scale-125 transition-transform"></div>
-                  <div className="text-sm text-ash-500 mb-1">2020 — 2021</div>
-                  <h4 className="text-lg font-semibold text-ash-900 dark:text-ash-100">10th Standard</h4>
-                  <p className="text-ash-600 dark:text-ash-400">Matrix High School • GPA: 10.0</p>
-                </div>
+                {educationHistory.map((edu, idx) => (
+                  <div key={idx} className="relative pl-10 cursor-default group">
+                    <div className={`absolute left-0 top-1.5 w-4 h-4 rounded-full border-4 border-ash-50 dark:border-ash-950 ${edu.current ? 'bg-ash-900 dark:bg-ash-100' : 'bg-ash-400 dark:bg-ash-600'} group-hover:scale-125 transition-transform`}></div>
+                    <div className="text-sm text-ash-500 mb-1">{edu.period}</div>
+                    <h4 className="text-lg font-semibold text-ash-900 dark:text-ash-100">{edu.degree}</h4>
+                    <p className="text-ash-600 dark:text-ash-400">{edu.institution}</p>
+                  </div>
+                ))}
                 {/* Education details only now */}
               </div>
 
@@ -372,33 +357,7 @@ function App() {
               <div className="mt-16">
                 <h3 className="text-2xl font-bold text-ash-900 dark:text-ash-100 mb-8">Badges of Expertise</h3>
                 <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                  {[
-                    {
-                      name: 'Oracle OCI AI Foundations',
-                      issuer: 'Oracle',
-                      link: 'https://drive.google.com/file/d/19cFovVK7RqfwaPoBIBqC5G70jjvKYsY3/view?usp=sharing'
-                    },
-                    {
-                      name: 'Java Full Stack Developer',
-                      issuer: 'Imarticus Learning',
-                      link: 'https://drive.google.com/file/d/1uu7ZfvbmVrVB0sWRv7grTIcKkw-4liNx/view?usp=drive_link'
-                    },
-                    {
-                      name: 'AWS Academy Graduate - Cloud Foundations',
-                      issuer: 'AWS Academy',
-                      link: 'https://drive.google.com/file/d/1kFhceQC0rQxlr2w7ZPUpc8RUCoO7Xvl4/view?usp=sharing'
-                    },
-                    {
-                      name: 'Git & GitHub Certification',
-                      issuer: 'Version Control',
-                      link: 'https://drive.google.com/file/d/1Zsg6ePvgON6xDIfjVgVrRAad5HA2UiVi/view?usp=drive_link'
-                    },
-                    {
-                      name: 'Empowerment & Employability',
-                      issuer: 'Wadhwani Foundation',
-                      link: 'https://drive.google.com/file/d/1KWvO73iLc2-oDhe1Y6rwtvASQclPx1S8/view?usp=sharing'
-                    }
-                  ].map((cert, idx) => (
+                  {certifications.map((cert, idx) => (
                     <a
                       key={idx}
                       href={cert.link}
@@ -458,16 +417,7 @@ function App() {
               <div className="mt-12">
                 <h3 className="text-xl font-bold text-ash-900 dark:text-ash-100 mb-6 tracking-tight">Digital Toolkit</h3>
                 <div className="grid grid-cols-4 gap-3">
-                  {[
-                    { name: 'React.js', icon: '⚛️' },
-                    { name: 'Tailwind', icon: '🌊' },
-                    { name: 'Node.js', icon: '🟢' },
-                    { name: 'VS Code', icon: '💻' },
-                    { name: 'Figma', icon: '🎨' },
-                    { name: 'Docker', icon: '🐋' },
-                    { name: 'Linux', icon: '🐧' },
-                    { name: 'Postman', icon: '🚀' }
-                  ].map((tool) => (
+                  {digitalToolkit.map((tool) => (
                     <div key={tool.name} className="project-card p-4 rounded-xl flex flex-col items-center gap-2 group/tool">
                       <span className="text-2xl group-hover/tool:scale-110 group-hover/tool:rotate-12 transition-all">{tool.icon}</span>
                       <span className="text-[10px] font-bold uppercase tracking-widest text-ash-500">{tool.name}</span>
@@ -510,13 +460,7 @@ function App() {
               <div className="mt-12">
                 <h3 className="text-xl font-bold text-ash-900 dark:text-ash-100 mb-6">Interests & Hobbies</h3>
                 <div className="flex flex-wrap gap-3">
-                  {[
-                    { name: 'Ethical Hacking', icon: '🕵️‍♂️' },
-                    { name: 'Web Architecture', icon: '🏗️' },
-                    { name: 'UI/UX Design', icon: '✨' },
-                    { name: 'Open Source', icon: '🌍' },
-                    { name: 'Problem Solving', icon: '🧩' }
-                  ].map((hobby) => (
+                  {hobbies.map((hobby) => (
                     <span key={hobby.name} className="skill-tag px-4 py-2 rounded-xl text-xs flex items-center gap-2">
                       <span>{hobby.icon}</span>
                       {hobby.name}
@@ -729,14 +673,7 @@ function App() {
             <p className="text-ash-600 dark:text-ash-400 text-lg">Tools and languages I use to bring ideas to life.</p>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
-            {[
-              { title: 'Languages', skills: [{name: 'TypeScript', icon: 'typescript/typescript-original.svg'}, {name: 'JavaScript', icon: 'javascript/javascript-original.svg'}, {name: 'Java', icon: 'java/java-original.svg'}, {name: 'Python', icon: 'python/python-original.svg'}] },
-              { title: 'Frontend', skills: [{name: 'React', icon: 'react/react-original.svg'}, {name: 'Next.js', icon: 'nextjs/nextjs-original.svg'}, {name: 'Expo', icon: null}, {name: 'Tailwind CSS', icon: 'tailwindcss/tailwindcss-original.svg'}] },
-              { title: 'Backend', skills: [{name: 'Node.js', icon: 'nodejs/nodejs-original.svg'}, {name: 'Bun.js', icon: 'bun/bun-original.svg'}, {name: 'Fastify', icon: 'fastify/fastify-plain.svg'}, {name: 'Express', icon: 'express/express-original.svg'}, {name: 'Flask', icon: 'flask/flask-original.svg'}] },
-              { title: 'Databases', skills: [{name: 'MongoDB', icon: 'mongodb/mongodb-original.svg'}, {name: 'PostgreSQL', icon: 'postgresql/postgresql-original.svg'}, {name: 'MySQL', icon: 'mysql/mysql-original.svg'}, {name: 'Redis', icon: 'redis/redis-original.svg'}] },
-              { title: 'Tools & Cloud', skills: [{name: 'Git', icon: 'git/git-original.svg'}, {name: 'Docker', icon: 'docker/docker-original.svg'}, {name: 'Kubernetes', icon: 'kubernetes/kubernetes-plain.svg'}, {name: 'AWS', icon: 'amazonwebservices/amazonwebservices-original-wordmark.svg'}, {name: 'Vercel', icon: null}, {name: 'Oracle OCI', icon: null}] },
-              { title: 'Currently Learning', skills: [{name: 'Machine Learning', icon: null}] }
-            ].map((cat, i) => (
+            {technicalSkills.map((cat, i) => (
               <div key={i} className="project-card p-6 rounded-2xl space-y-4 hover:-translate-y-1 transition-transform duration-300">
                 <h3 className="text-lg font-bold text-ash-900 dark:text-ash-100 border-b border-ash-200 dark:border-ash-800 pb-2">{cat.title}</h3>
                 <div className="flex flex-wrap gap-2">
