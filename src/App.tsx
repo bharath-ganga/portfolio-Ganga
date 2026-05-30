@@ -7,6 +7,12 @@ import { technicalSkills, digitalToolkit, hobbies } from './data/skills';
 import { certifications } from './data/certifications';
 import { educationHistory } from './data/experience';
 import { Project } from './data/types';
+import { InteractiveTerminal } from './components/ui/InteractiveTerminal';
+import { TechMarquee } from './components/ui/TechMarquee';
+import { RoleSwitcher } from './components/ui/RoleSwitcher';
+import { CurrentTime } from './components/ui/CurrentTime';
+import { TypewriterName } from './components/ui/TypewriterName';
+import { AnimatedCounter } from './components/ui/AnimatedCounter';
 
 function App() {
   const [formStatus, setFormStatus] = useState('')
@@ -230,7 +236,7 @@ function App() {
               <a href="#projects" className="inline-flex items-center justify-center bg-ash-900 dark:bg-ash-100 text-ash-50 dark:text-ash-900 px-8 py-3 rounded-lg font-medium hover:bg-ash-800 dark:hover:bg-ash-200 transition-colors w-full sm:w-auto">
                 View Projects
               </a>
-              <a href="/Ganga_Bharath_Resume.pdf" target="_blank" className="inline-flex items-center justify-center border border-ash-300 dark:border-ash-700 text-ash-900 dark:text-ash-100 px-8 py-3 rounded-lg font-medium hover:bg-ash-100 dark:hover:bg-ash-800 transition-colors w-full sm:w-auto gap-2">
+              <a href="/resume_ganga.pdf" target="_blank" className="inline-flex items-center justify-center border border-ash-300 dark:border-ash-700 text-ash-900 dark:text-ash-100 px-8 py-3 rounded-lg font-medium hover:bg-ash-100 dark:hover:bg-ash-800 transition-colors w-full sm:w-auto gap-2">
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 0 1 -2 -2V5a2 2 0 0 1 2 -2h5.586a1 1 0 0 1 .707 .293l5.414 5.414a1 1 0 0 1 .293 .707V19a2 2 0 0 1 -2 2z" /></svg>
                 Resume
               </a>
@@ -270,7 +276,7 @@ function App() {
                 {/* Social & Resume Bar */}
                 <div className="flex flex-wrap items-center gap-4 pt-4">
                   <a
-                    href="/Ganga_Bharath_Resume.pdf"
+                    href="/resume_ganga.pdf"
                     target="_blank"
                     className="inline-flex items-center gap-2 bg-ash-900 dark:bg-ash-100 text-ash-50 dark:text-ash-900 px-6 py-2.5 rounded-full font-bold text-sm hover:scale-105 transition-all shadow-lg shadow-ash-900/10 dark:shadow-none"
                   >
@@ -914,189 +920,16 @@ function App() {
   )
 }
 
-function InteractiveTerminal() {
-  const [history, setHistory] = useState<{ cmd: string; output: string }[]>([
-    { cmd: 'whoami', output: 'Ganga Bharath: Full-Stack Developer & Cybersec Learner' },
-    { cmd: 'focus', output: 'Synthesizing secure, scalable web architectures.' }
-  ])
-  const [input, setInput] = useState('')
-  // const terminalRef = useState<HTMLDivElement | null>(null)[0]
 
-  const commands: { [key: string]: string } = {
-    'help': 'Available: whoami, focus, skills, clear, echo',
-    'whoami': 'Ganga Bharath. CSE Undergrad at VIT-AP. Passionate about bridging the gap between web dev and security.',
-    'focus': 'Learning the art of penetration testing while perfecting React/Node.js ecosystems.',
-    'skills': 'Languages: Java, Python, TS; Web: React, Node, SQL; Security: Network scanning, OWASP Top 10.',
-    'clear': 'CLEAR_HISTORY'
-  }
 
-  const handleCommand = (e: React.FormEvent) => {
-    e.preventDefault()
-    const cleanInput = input.toLowerCase().trim()
-    if (!cleanInput) return
 
-    if (cleanInput === 'clear') {
-      setHistory([])
-    } else {
-      const output = commands[cleanInput] || `Command not found: ${cleanInput}. Type 'help' for options.`
-      setHistory([...history, { cmd: input, output }])
-    }
-    setInput('')
-  }
 
-  return (
-    <div
-      className="bg-ash-900 border-x border-b border-ash-700 p-4 font-mono text-xs text-green-500 h-48 overflow-y-auto rounded-b-xl scrollbar-hide"
-      onClick={() => document.getElementById('term-input')?.focus()}
-    >
-      {history.map((item, i) => (
-        <div key={i} className="mb-2">
-          <div className="flex gap-2">
-            <span className="text-ash-500">➜</span>
-            <span className="text-ash-100">{item.cmd}</span>
-          </div>
-          <div className="text-ash-400 mt-1 pl-4 break-words">{item.output}</div>
-        </div>
-      ))}
-      <form onSubmit={handleCommand} className="flex gap-2">
-        <span className="text-ash-500">➜</span>
-        <input
-          id="term-input"
-          type="text"
-          value={input}
-          onChange={(e) => setInput(e.target.value)}
-          className="bg-transparent border-none outline-none text-ash-100 flex-1"
-          autoComplete="off"
-          spellCheck="false"
-        />
-      </form>
-    </div>
-  )
-}
 
-function TechMarquee() {
-  const techs = ['Java', 'Python', 'React', 'Node.js', 'TypeScript', 'Docker', 'AWS', 'MongoDB', 'PostgreSQL', 'Fastify', 'MediaPipe', 'OpenCV']
-  return (
-    <div className="overflow-hidden relative">
-      <div className="absolute inset-y-0 left-0 w-20 bg-gradient-to-r from-ash-50 dark:from-ash-950 to-transparent z-10"></div>
-      <div className="absolute inset-y-0 right-0 w-20 bg-gradient-to-l from-ash-50 dark:from-ash-950 to-transparent z-10"></div>
-      <div className="marquee-content whitespace-nowrap py-2">
-        {[...techs, ...techs].map((tech, i) => (
-          <span key={tech + i} className="text-lg font-mono text-ash-400 dark:text-ash-600 px-4 select-none">
-            {tech}
-          </span>
-        ))}
-      </div>
-    </div>
-  )
-}
 
-function RoleSwitcher() {
-  const roles = ['Full-Stack Developer', 'AI Solutions Architect', 'Cybersecurity Enthusiast', 'Problem Solver']
-  const [index, setIndex] = useState(0)
-  const [fade, setFade] = useState(true)
 
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setFade(false)
-      setTimeout(() => {
-        setIndex((prev) => (prev + 1) % roles.length)
-        setFade(true)
-      }, 500)
-    }, 3000)
-    return () => clearInterval(interval)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
 
-  return (
-    <span className={`transition-all duration-500 inline-block ${fade ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
-      {roles[index]}
-    </span>
-  )
-}
 
-function CurrentTime() {
-  const [date, setDate] = useState(new Date())
 
-  useEffect(() => {
-    const timer = setInterval(() => setDate(new Date()), 1000)
-    return () => clearInterval(timer)
-  }, [])
 
-  const hours = date.getHours() % 12 || 12
-  const minutes = date.getMinutes().toString().padStart(2, '0')
-  const ampm = date.getHours() >= 12 ? 'pm' : 'am'
-  const month = date.toLocaleString('default', { month: 'short' })
-  const day = date.getDate()
-
-  return (
-    <div className="fixed bottom-8 right-8 z-50 hidden lg:flex items-center gap-3 bg-white/50 dark:bg-ash-900/50 backdrop-blur-md px-5 py-3 rounded-2xl border border-ash-200/50 dark:border-ash-700/50 shadow-xl transition-all duration-500 hover:scale-105 hover:bg-white/70 dark:hover:bg-ash-800/70">
-      <div className="text-4xl font-bold tracking-tight text-ash-900 dark:text-ash-100">
-        {hours}:{minutes}
-      </div>
-      <div className="flex flex-col justify-center text-xs font-semibold text-ash-600 dark:text-ash-400">
-        <span className="uppercase">{ampm}</span>
-        <span>{month} {day}</span>
-      </div>
-    </div>
-  )
-}
-
-function TypewriterName({ text = "Ganga Bharath" }: { text?: string }) {
-  const [displayedText, setDisplayedText] = useState('')
-  const [index, setIndex] = useState(0)
-
-  useEffect(() => {
-    if (index < text.length) {
-      const timeout = setTimeout(() => {
-        setDisplayedText(prev => prev + text[index])
-        setIndex(prev => prev + 1)
-      }, 120)
-      return () => clearTimeout(timeout)
-    }
-  }, [index, text])
-
-  return (
-    <span className="inline-flex items-center justify-center">
-      <span className="text-gradient">{displayedText}</span>
-    </span>
-  )
-}
-
-function AnimatedCounter({ value, duration = 2000 }: { value: number, duration?: number }) {
-  const [count, setCount] = useState(0)
-  const [hasAnimated, setHasAnimated] = useState(false)
-  const nodeRef = useRef<HTMLSpanElement>(null)
-
-  useEffect(() => {
-    const observer = new IntersectionObserver((entries) => {
-      if (entries[0].isIntersecting && !hasAnimated) {
-        setHasAnimated(true)
-      }
-    }, { threshold: 0.1 })
-
-    if (nodeRef.current) observer.observe(nodeRef.current)
-    return () => observer.disconnect()
-  }, [hasAnimated])
-
-  useEffect(() => {
-    if (!hasAnimated) return
-    let startTimestamp: number | null = null
-    const step = (timestamp: number) => {
-      if (!startTimestamp) startTimestamp = timestamp
-      const progress = Math.min((timestamp - startTimestamp) / duration, 1)
-      const easeOut = 1 - Math.pow(1 - progress, 4)
-      setCount(Math.floor(easeOut * value))
-      if (progress < 1) {
-        window.requestAnimationFrame(step)
-      } else {
-        setCount(value)
-      }
-    }
-    window.requestAnimationFrame(step)
-  }, [hasAnimated, value, duration])
-
-  return <span ref={nodeRef}>{count}</span>
-}
 
 export default App
