@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { GitHubCalendar } from 'react-github-calendar'
 import { X, ExternalLink, MonitorPlay, Music } from 'lucide-react'
@@ -6,7 +6,7 @@ import { X, ExternalLink, MonitorPlay, Music } from 'lucide-react'
 import { technicalSkills, digitalToolkit, hobbies } from './data/skills';
 import { certifications } from './data/certifications';
 import { educationHistory } from './data/experience';
-import { Project } from './data/types';
+import type { Project } from './data/types';
 import { InteractiveTerminal } from './components/ui/InteractiveTerminal';
 import { TechMarquee } from './components/ui/TechMarquee';
 import { RoleSwitcher } from './components/ui/RoleSwitcher';

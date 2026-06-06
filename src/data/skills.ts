@@ -1,4 +1,4 @@
-import { SkillCategory, ToolItem } from './types';
+import type { SkillCategory, ToolItem } from './types';
 
 export const technicalSkills: SkillCategory[] = [
   { title: 'Languages', skills: [{name: 'TypeScript', icon: 'typescript/typescript-original.svg'}, {name: 'JavaScript', icon: 'javascript/javascript-original.svg'}, {name: 'Java', icon: 'java/java-original.svg'}, {name: 'Python', icon: 'python/python-original.svg'}] },
