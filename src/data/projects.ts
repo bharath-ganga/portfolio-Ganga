@@ -17,6 +17,21 @@ export const projects: Project[] = [
     featured: true
   },
   {
+    title: 'Smart Resume Screener',
+    description: 'An AI-powered hiring platform that parses resumes in bulk, evaluates candidates against job descriptions, and produces ranked, explainable shortlists using Google Gemini.',
+    image: '/projects-resume-screener-real.png',
+    skills: ['React', 'TypeScript', 'FastAPI', 'Python', 'Google Gemini', 'SQLite'],
+    github: 'https://github.com/bharath-ganga/Smart-Resume-Screener',
+    demo: 'https://frontend-alpha-eight-95.vercel.app/',
+    details: [
+      'Bulk PDF and TXT resume upload with structured candidate extraction',
+      'Gemini-powered 1–10 match scoring with strengths, gaps, and recommendations',
+      'Configurable auto-shortlisting and a sortable ranked candidate dashboard',
+      'Persistent candidate and screening data with one-click CSV export'
+    ],
+    featured: true
+  },
+  {
     title: 'Expense Tracker',
     description: 'A full-stack finance tracking app with automated categorization and insightful dashboard visualizations.',
     image: '/projects-expense.png',
@@ -28,21 +43,6 @@ export const projects: Project[] = [
       'Automated expense categorization',
       'REST API built with Node.js and Express',
       'Secure data storage with MongoDB'
-    ],
-    featured: false
-  },
-  {
-    title: 'SDN DDoS Detection',
-    description: 'Research-based ML model for detecting network attacks in software-defined network architectures.',
-    image: '/projects-cyber.png',
-    skills: ['Python', 'Machine Learning', 'SDN', 'Networking', 'Scikit-learn'],
-    github: 'https://github.com/bharath-ganga/ML-Based-SDN-DDoS-Detection',
-    demo: null,
-    details: [
-      'Implemented multiple ML classifiers for network traffic analysis',
-      'Designed to work within Software-Defined Networking controllers',
-      'High accuracy in distinguishing legitimate traffic from DDoS floods',
-      'Comprehensive research on network security architectures'
     ],
     featured: false
   }

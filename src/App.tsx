@@ -1,935 +1,200 @@
-import { useState, useEffect } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
+import { useEffect, useState } from 'react'
+import { AnimatePresence, motion } from 'framer-motion'
 import { GitHubCalendar } from 'react-github-calendar'
-import { X, ExternalLink, MonitorPlay, Music } from 'lucide-react'
+import { ArrowDownRight, ArrowUpRight, Award, BookOpen, BriefcaseBusiness, CheckCircle2, Code2, Download, ExternalLink, GitBranch, Mail, Menu, Send, ShieldCheck, Sparkles, X } from 'lucide-react'
+import { certifications } from './data/certifications'
+import { educationHistory } from './data/experience'
+import { projects } from './data/projects'
+import { digitalToolkit, hobbies, technicalSkills } from './data/skills'
+import type { Project } from './data/types'
+import { AnimatedCounter } from './components/ui/AnimatedCounter'
+import { InteractiveTerminal } from './components/ui/InteractiveTerminal'
+import { RoleSwitcher } from './components/ui/RoleSwitcher'
+import { TechMarquee } from './components/ui/TechMarquee'
 
-import { technicalSkills, digitalToolkit, hobbies } from './data/skills';
-import { certifications } from './data/certifications';
-import { educationHistory } from './data/experience';
-import type { Project } from './data/types';
-import { InteractiveTerminal } from './components/ui/InteractiveTerminal';
-import { TechMarquee } from './components/ui/TechMarquee';
-import { RoleSwitcher } from './components/ui/RoleSwitcher';
-import { CurrentTime } from './components/ui/CurrentTime';
-import { TypewriterName } from './components/ui/TypewriterName';
-import { AnimatedCounter } from './components/ui/AnimatedCounter';
+const navItems = ['About', 'Projects', 'Research', 'Skills', 'Contact']
+const socialLinks = [
+  { label: 'GitHub', href: 'https://github.com/bharath-ganga', icon: GitBranch },
+  { label: 'LinkedIn', href: 'https://www.linkedin.com/in/ganga-bharath-a6596b375/', icon: BriefcaseBusiness },
+  { label: 'Email', href: 'mailto:bharathganga7@gmail.com', icon: Mail },
+]
+
+function SectionHeading({ eyebrow, title, copy }: { eyebrow: string; title: string; copy?: string }) {
+  return <div className="section-heading"><p className="eyebrow"><span>{eyebrow}</span></p><h2>{title}</h2>{copy && <p className="section-copy">{copy}</p>}</div>
+}
 
 function App() {
   const [formStatus, setFormStatus] = useState('')
   const [isSubmitting, setIsSubmitting] = useState(false)
-  const [cursorPos, setCursorPos] = useState({ x: 0, y: 0 })
-  const [isHovering, setIsHovering] = useState(false)
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [selectedProject, setSelectedProject] = useState<Project | null>(null)
-
-  // Live stats state
   const [leetcodeStats, setLeetcodeStats] = useState({ easy: 120, medium: 85, hard: 15 })
   const [githubStats, setGithubStats] = useState({ repos: 15, commits: 214 })
 
-  // Fetch live stats
   useEffect(() => {
-    // Fetch LeetCode stats
-    fetch('https://leetcode-api-faisalshohag.vercel.app/GANGA_BHARATH')
-      .then(res => res.json())
-      .then(data => {
-        if (data && data.easySolved !== undefined) {
-          setLeetcodeStats({
-            easy: data.easySolved,
-            medium: data.mediumSolved,
-            hard: data.hardSolved
-          })
-        }
-      })
-      .catch(err => console.error('Error fetching LeetCode stats:', err))
-
-    // Fetch GitHub Repositories count
-    fetch('https://api.github.com/users/bharath-ganga')
-      .then(res => res.json())
-      .then(data => {
-        if (data && data.public_repos !== undefined) {
-          setGithubStats(prev => ({ ...prev, repos: data.public_repos }))
-        }
-      })
-      .catch(err => console.error('Error fetching GitHub stats:', err))
+    fetch('https://leetcode-api-faisalshohag.vercel.app/GANGA_BHARATH').then((res) => res.json()).then((data) => {
+      if (data?.easySolved !== undefined) setLeetcodeStats({ easy: data.easySolved, medium: data.mediumSolved, hard: data.hardSolved })
+    }).catch(() => undefined)
+    fetch('https://api.github.com/users/bharath-ganga').then((res) => res.json()).then((data) => {
+      if (data?.public_repos !== undefined) setGithubStats((previous) => ({ ...previous, repos: data.public_repos }))
+    }).catch(() => undefined)
   }, [])
 
-  // Force dark mode
   useEffect(() => {
-    document.documentElement.classList.add('dark')
-  }, [])
+    document.body.style.overflow = selectedProject || mobileMenuOpen ? 'hidden' : ''
+    return () => { document.body.style.overflow = '' }
+  }, [selectedProject, mobileMenuOpen])
 
-  // Custom Cursor Logic
-  useEffect(() => {
-    const handleMouseMove = (e: MouseEvent) => {
-      setCursorPos({ x: e.clientX, y: e.clientY })
-    }
-    const handleMouseOver = (e: MouseEvent) => {
-      const target = e.target as HTMLElement
-      if (target.closest('a') || target.closest('button')) {
-        setIsHovering(true)
-      } else {
-        setIsHovering(false)
-      }
-    }
-    window.addEventListener('mousemove', handleMouseMove)
-    window.addEventListener('mouseover', handleMouseOver)
-    return () => {
-      window.removeEventListener('mousemove', handleMouseMove)
-      window.removeEventListener('mouseover', handleMouseOver)
-    }
-  }, [])
-
-  // Scroll Reveal Logic
-  useEffect(() => {
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('reveal-visible')
-        }
-      })
-    }, { threshold: 0.1 })
-
-    document.querySelectorAll('.reveal-hidden').forEach((el) => observer.observe(el))
-    return () => observer.disconnect()
-  }, [])
-
-  const handleFormSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
-    setIsSubmitting(true)
-
-    const form = e.target as HTMLFormElement
-    const formData = new FormData(form)
-
+  const handleFormSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault(); setIsSubmitting(true)
+    const form = event.currentTarget
     try {
-      const response = await fetch('https://formsubmit.co/ajax/bharathganga7@gmail.com', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json'
-        },
-        body: JSON.stringify(Object.fromEntries(formData))
-      })
-
-      if (response.ok) {
-        setFormStatus('success')
-        form.reset()
-      } else {
-        setFormStatus('error')
-      }
-    } catch {
-      setFormStatus('error')
-    } finally {
-      setIsSubmitting(false)
-      // Reset status after 5 seconds
-      setTimeout(() => setFormStatus(''), 5000)
-    }
+      const response = await fetch('https://formsubmit.co/ajax/bharathganga7@gmail.com', { method: 'POST', headers: { 'Content-Type': 'application/json', Accept: 'application/json' }, body: JSON.stringify(Object.fromEntries(new FormData(form))) })
+      setFormStatus(response.ok ? 'success' : 'error'); if (response.ok) form.reset()
+    } catch { setFormStatus('error') }
+    finally { setIsSubmitting(false); window.setTimeout(() => setFormStatus(''), 5000) }
   }
 
-  return (
-    <div className="min-h-screen transition-colors duration-500">
-      {/* Background blobs */}
-      <div className="interactive-bg">
-        <div className="blob bg-purple-300 dark:bg-purple-900 top-0 -left-4 animate-blob"></div>
-        <div className="blob bg-yellow-300 dark:bg-yellow-900 top-0 -right-4 animate-blob [animation-delay:2s]"></div>
-        <div className="blob bg-pink-300 dark:bg-pink-900 -bottom-8 left-20 animate-blob [animation-delay:4s]"></div>
-      </div>
+  const totalSolved = leetcodeStats.easy + leetcodeStats.medium + leetcodeStats.hard
 
-      {/* Custom Cursor */}
-      <div
-        className="custom-cursor hidden md:block"
-        style={{ left: cursorPos.x, top: cursorPos.y, transform: `translate(-50%, -50%) scale(${isHovering ? 2.5 : 1})` }}
-      ></div>
-      <div
-        className="custom-cursor-dot hidden md:block"
-        style={{ left: cursorPos.x, top: cursorPos.y }}
-      ></div>
+  return <div className="site-shell">
+    <header className="site-header">
+      <a className="brand" href="#top" aria-label="Ganga Bharath, home"><span className="brand-mark">GB</span><span className="brand-name">Ganga Bharath</span></a>
+      <nav className="desktop-nav" aria-label="Primary navigation">{navItems.map((item) => <a key={item} href={`#${item.toLowerCase()}`}>{item}</a>)}</nav>
+      <a className="header-cta" href="mailto:bharathganga7@gmail.com">Let's talk <ArrowUpRight size={16} /></a>
+      <button className="menu-button" onClick={() => setMobileMenuOpen(true)} aria-label="Open menu"><Menu size={22} /></button>
+    </header>
 
-      {/* Floating Time Display */}
-      <CurrentTime />
+    <AnimatePresence>{mobileMenuOpen && <motion.div className="mobile-menu" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+      <button onClick={() => setMobileMenuOpen(false)} aria-label="Close menu"><X size={24} /></button>
+      <div>{navItems.map((item, index) => <a key={item} href={`#${item.toLowerCase()}`} onClick={() => setMobileMenuOpen(false)}><span>0{index + 1}</span>{item}</a>)}</div>
+      <p>Available for internships and select freelance projects.</p>
+    </motion.div>}</AnimatePresence>
 
-      {/* Navigation */}
-      <nav className="fixed top-0 w-full z-50 pt-4">
-        <div className="flex justify-center px-4">
-          <div className="nav-blur border rounded-full shadow-lg max-w-4xl w-full">
-            <div className="flex items-center justify-center h-14 px-6 relative">
-              {/* Navigation Links - Left */}
-              <div className="hidden md:flex space-x-6 absolute left-6">
-                <a href="#about" className="text-ash-600 dark:text-ash-400 hover:text-ash-900 dark:hover:text-ash-100 transition-colors duration-200 font-medium text-sm">
-                  About
-                </a>
-                <a href="#projects" className="text-ash-600 dark:text-ash-400 hover:text-ash-900 dark:hover:text-ash-100 transition-colors duration-200 font-medium text-sm">
-                  Projects
-                </a>
-              </div>
-
-              {/* Centered Name */}
-              <div className="text-lg font-bold text-ash-900 dark:text-ash-100">
-                Ganga Bharath
-              </div>
-
-              {/* Navigation Links - Right (desktop only) */}
-              <div className="hidden md:flex items-center space-x-6 absolute right-6">
-                <a href="#skills" className="text-ash-400 hover:text-ash-100 transition-colors duration-200 font-medium text-sm">
-                  Skills
-                </a>
-                <a href="#contact" className="text-ash-400 hover:text-ash-100 transition-colors duration-200 font-medium text-sm">
-                  Contact
-                </a>
-              </div>
-
-              {/* Mobile right controls */}
-              <div className="md:hidden flex items-center gap-2 absolute right-4">
-                <button
-                  onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                  className="p-2 rounded-full hover:bg-ash-800 transition-colors"
-                  aria-label="Toggle menu"
-                >
-                  {mobileMenuOpen ? (
-                    <svg className="w-5 h-5 text-ash-100" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                    </svg>
-                  ) : (
-                    <svg className="w-5 h-5 text-ash-100" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-                    </svg>
-                  )}
-                </button>
-              </div>
-            </div>
+    <main>
+      <section id="top" className="hero section-pad">
+        <div className="hero-copy">
+          <div className="availability"><span /> Available for new opportunities</div>
+          <p className="hero-kicker">Full-stack developer · VIT-AP University</p>
+          <h1>I build digital products that are <span>useful, secure,</span> and made to last.</h1>
+          <div className="hero-bottom"><p>I'm Ganga Bharath, a computer science student turning complex ideas into focused, practical software—from AI experiences to secure web platforms.</p>
+            <div className="hero-actions"><a className="button button-primary" href="#projects">Explore my work <ArrowDownRight size={18} /></a><a className="button button-secondary" href="/resume_ganga.pdf" target="_blank" rel="noreferrer">Résumé <Download size={17} /></a></div>
           </div>
         </div>
-
-        {/* Mobile Menu Drawer */}
-        {mobileMenuOpen && (
-          <div className="md:hidden mx-4 mt-2 nav-blur border rounded-2xl shadow-xl overflow-hidden">
-            <div className="flex flex-col py-2">
-              {['about', 'projects', 'skills', 'contact'].map((section) => (
-                <a
-                  key={section}
-                  href={`#${section}`}
-                  onClick={() => setMobileMenuOpen(false)}
-                  className="px-6 py-4 text-ash-700 dark:text-ash-300 hover:text-ash-900 dark:hover:text-ash-100 hover:bg-ash-100/50 dark:hover:bg-ash-800/50 font-medium capitalize transition-colors border-b border-ash-200/30 dark:border-ash-700/30 last:border-0"
-                >
-                  {section.charAt(0).toUpperCase() + section.slice(1)}
-                </a>
-              ))}
-            </div>
-          </div>
-        )}
-      </nav>
-
-      {/* Hero Section */}
-      <section className="pt-28 pb-16 sm:pt-36 sm:pb-20">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center max-w-4xl mx-auto reveal-hidden">
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-bold text-ash-900 dark:text-ash-100 leading-tight flex flex-col items-center justify-center">
-              <TypewriterName />
-              <span className="block text-ash-600 dark:text-ash-400 mt-2 min-h-[1.2em]">
-                <RoleSwitcher />
-              </span>
-            </h1>
-            <p className="text-lg sm:text-xl lg:text-2xl text-ash-600 dark:text-ash-400 mt-6 mb-8 leading-relaxed max-w-3xl mx-auto">
-              Computer Science student at VIT-AP University, building practical solutions
-              that people actually use and love.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-              <a href="#projects" className="inline-flex items-center justify-center bg-ash-900 dark:bg-ash-100 text-ash-50 dark:text-ash-900 px-8 py-3 rounded-lg font-medium hover:bg-ash-800 dark:hover:bg-ash-200 transition-colors w-full sm:w-auto">
-                View Projects
-              </a>
-              <a href="/resume_ganga.pdf" target="_blank" className="inline-flex items-center justify-center border border-ash-300 dark:border-ash-700 text-ash-900 dark:text-ash-100 px-8 py-3 rounded-lg font-medium hover:bg-ash-100 dark:hover:bg-ash-800 transition-colors w-full sm:w-auto gap-2">
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 0 1 -2 -2V5a2 2 0 0 1 2 -2h5.586a1 1 0 0 1 .707 .293l5.414 5.414a1 1 0 0 1 .293 .707V19a2 2 0 0 1 -2 2z" /></svg>
-                Resume
-              </a>
-            </div>
-          </div>
+        <div className="hero-panel" aria-label="Developer profile summary">
+          <div className="panel-topline"><span>Currently</span><span>2026</span></div>
+          <div className="role-display"><Code2 size={28} /><RoleSwitcher /></div>
+          <div className="hero-code" aria-hidden="true"><span>01</span><code>const craft = &#123;</code><span>02</span><code>&nbsp;&nbsp;thinking: 'clear',</code><span>03</span><code>&nbsp;&nbsp;systems: 'scalable',</code><span>04</span><code>&nbsp;&nbsp;security: 'built-in'</code><span>05</span><code>&#125;;</code></div>
+          <div className="panel-footer"><div><strong>Based in</strong><span>India</span></div><div><strong>Focus</strong><span>Web · AI · Security</span></div></div>
         </div>
       </section>
 
-      {/* About & Experience Section */}
-      <section id="about" className="py-16 lg:py-32 reveal-hidden">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16 items-start">
-            <div className="space-y-8 animate-fadeIn">
-              <div className="flex items-center gap-2 mb-4 animate-fadeIn">
-                <span className="relative flex h-3 w-3">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
-                  <span className="relative inline-flex rounded-full h-3 w-3 bg-green-500"></span>
-                </span>
-                <span className="text-xs font-bold text-green-600 dark:text-green-400 uppercase tracking-widest">
-                  Available for Internships & Projects
-                </span>
-              </div>
-              <h2 className="text-4xl lg:text-5xl font-bold text-ash-900 dark:text-ash-100 tracking-tight">
-                <span className="text-gradient">Crafting Digital</span> <br />
-                <span className="text-ash-600 dark:text-ash-400">Experiences</span>
-              </h2>
-              <div className="space-y-6 text-lg text-ash-600 dark:text-ash-400 leading-relaxed">
-                <p>
-                  Hello there, I am <b>Ganga Bharath</b>. I'm a <b>Computer Science Engineering</b> student at VIT-AP University.
-                  I am a Full-Stack Developer skilled in Java, Python, and modern web technologies.
-                </p>
-                <p>
-                  I specialize in building scalable applications and AI-based solutions. My passion lies at the intersection of
-                  software development and cybersecurity, creating tools that are both powerful and secure.
-                </p>
+      <div className="tech-strip" aria-label="Core technologies"><TechMarquee /></div>
 
-                {/* Social & Resume Bar */}
-                <div className="flex flex-wrap items-center gap-4 pt-4">
-                  <a
-                    href="/resume_ganga.pdf"
-                    target="_blank"
-                    className="inline-flex items-center gap-2 bg-ash-900 dark:bg-ash-100 text-ash-50 dark:text-ash-900 px-6 py-2.5 rounded-full font-bold text-sm hover:scale-105 transition-all shadow-lg shadow-ash-900/10 dark:shadow-none"
-                  >
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 0 1 -2 -2V5a2 2 0 0 1 2 -2h5.586a1 1 0 0 1 .707 .293l5.414 5.414a1 1 0 0 1 .293 .707V19a2 2 0 0 1 -2 2z" /></svg>
-                    Download Resume
-                  </a>
-                  <div className="h-8 w-px bg-ash-200 dark:bg-ash-800 mx-2 hidden sm:block"></div>
-                  <div className="flex items-center gap-4">
-                    <a href="https://github.com/bharath-ganga" target="_blank" rel="noopener noreferrer" className="p-2.5 rounded-full bg-white dark:bg-ash-800 border border-ash-200 dark:border-ash-700 hover:border-ash-900 dark:hover:border-ash-100 transition-colors group">
-                      <svg className="w-5 h-5 opacity-60 group-hover:opacity-100" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z" /></svg>
-                    </a>
-                    <a href="https://www.linkedin.com/in/ganga-bharath-a6596b375/" target="_blank" rel="noopener noreferrer" className="p-2.5 rounded-full bg-white dark:bg-ash-800 border border-ash-200 dark:border-ash-700 hover:border-ash-900 dark:hover:border-ash-100 transition-colors group">
-                      <svg className="w-5 h-5 opacity-60 group-hover:opacity-100" viewBox="0 0 24 24" fill="currentColor"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z" /></svg>
-                    </a>
-                    <a href="https://leetcode.com/u/GANGA_BHARATH/" target="_blank" rel="noopener noreferrer" className="p-2.5 rounded-full bg-white dark:bg-ash-800 border border-ash-200 dark:border-ash-700 hover:border-ash-900 dark:hover:border-ash-100 transition-colors group">
-                      <svg className="w-5 h-5 opacity-60 group-hover:opacity-100 text-orange-500" viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M16.102 17.93l-2.697 2.607c-.466.467-1.111.662-1.823.662s-1.357-.195-1.824-.662l-4.332-4.363c-.467-.467-.702-1.15-.702-1.863s.235-1.357.702-1.824l4.332-4.363c.467-.467 1.112-.662 1.824-.662.712 0 1.357.195 1.823.662l2.697 2.606c.514.515 1.311.515 1.826 0 .515-.515.515-1.346 0-1.862L15.228 5.67c-1.026-1.027-2.457-1.446-4.04-1.446-1.584 0-3.014.419-4.04 1.446L2.816 10.033c-1.027 1.027-1.446 2.458-1.446 4.041 0 1.583.419 3.014 1.446 4.041l4.332 4.363c1.026 1.027 2.456 1.446 4.04 1.446 1.583 0 3.013-.419 4.04-1.446l4.704-4.74c.515-.516.515-1.347 0-1.863-.516-.515-1.312-.515-1.826 0l-.004 .004zM22.215 13.917c-.515-.516-1.312-.516-1.827 0l-2.73 2.734c-.514.515-.514 1.346 0 1.862.258.258.597.387.937.387s.679-.129.936-.387l2.684-2.687c.515-.516.515-1.347 0-1.863l-.004 -.004z"></path>
-                      </svg>
-                    </a>
-                  </div>
-                </div>
-
-                <div className="pt-6 grid grid-cols-3 gap-3">
-                  <div className="project-card p-4 rounded-xl flex items-center gap-4">
-                    <div className="w-10 h-10 rounded-full bg-ash-100 dark:bg-ash-800 flex items-center justify-center text-xl">🚀</div>
-                    <div>
-                      <div className="font-bold text-ash-900 dark:text-ash-100 text-sm">Full-Stack</div>
-                      <div className="text-[10px] text-ash-500 uppercase">Developer</div>
-                    </div>
-                  </div>
-                  <div className="project-card p-4 rounded-xl flex items-center gap-4">
-                    <div className="w-10 h-10 rounded-full bg-ash-100 dark:bg-ash-800 flex items-center justify-center text-xl">🧠</div>
-                    <div>
-                      <div className="font-bold text-ash-900 dark:text-ash-100 text-sm">AI & ML</div>
-                      <div className="text-[10px] text-ash-500 uppercase">Solutions</div>
-                    </div>
-                  </div>
-                  <div className="project-card p-4 rounded-xl flex items-center gap-4">
-                    <div className="w-10 h-10 rounded-full bg-ash-100 dark:bg-ash-800 flex items-center justify-center text-xl">🛡️</div>
-                    <div>
-                      <div className="font-bold text-ash-900 dark:text-ash-100 text-sm">Security</div>
-                      <div className="text-[10px] text-ash-500 uppercase">First</div>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="mt-12 pt-8 border-t border-ash-200 dark:border-ash-800">
-                  <div className="text-xs font-bold text-ash-500 uppercase tracking-widest mb-4">Core Technologies</div>
-                  <TechMarquee />
-                </div>
-
-                {/* Interactive Terminal */}
-                <div className="mt-12 group/term overflow-hidden">
-                  <div className="flex items-center gap-2 px-4 py-2 bg-ash-200/50 dark:bg-ash-800/50 rounded-t-xl border-x border-t border-ash-200 dark:border-ash-700">
-                    <div className="flex gap-1.5">
-                      <div className="w-2.5 h-2.5 rounded-full bg-red-400"></div>
-                      <div className="w-2.5 h-2.5 rounded-full bg-yellow-400"></div>
-                      <div className="w-2.5 h-2.5 rounded-full bg-green-400"></div>
-                    </div>
-                    <div className="text-[10px] font-mono text-ash-500 ml-2">gb@portfolio: ~</div>
-                  </div>
-                  <InteractiveTerminal />
-                </div>
-              </div>
-            </div>
-
-            <div className="space-y-8 reveal-hidden [transition-delay:200ms]">
-              <h3 className="text-2xl font-bold text-ash-900 dark:text-ash-100 mb-8 tracking-tight">
-                <span className="text-gradient">Professional Journey</span>
-              </h3>
-              <div className="space-y-8 relative before:absolute before:inset-y-0 before:left-2 before:w-0.5 before:bg-ash-200 dark:before:bg-ash-800">
-                {educationHistory.map((edu, idx) => (
-                  <div key={idx} className="relative pl-10 cursor-default group">
-                    <div className={`absolute left-0 top-1.5 w-4 h-4 rounded-full border-4 border-ash-50 dark:border-ash-950 ${edu.current ? 'bg-ash-900 dark:bg-ash-100' : 'bg-ash-400 dark:bg-ash-600'} group-hover:scale-125 transition-transform`}></div>
-                    <div className="text-sm text-ash-500 mb-1">{edu.period}</div>
-                    <h4 className="text-lg font-semibold text-ash-900 dark:text-ash-100">{edu.degree}</h4>
-                    <p className="text-ash-600 dark:text-ash-400">{edu.institution}</p>
-                  </div>
-                ))}
-                {/* Education details only now */}
-              </div>
-
-              {/* Badges of Expertise - Separate Row */}
-              <div className="mt-16">
-                <h3 className="text-2xl font-bold text-ash-900 dark:text-ash-100 mb-8">Badges of Expertise</h3>
-                <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                  {certifications.map((cert, idx) => (
-                    <a
-                      key={idx}
-                      href={cert.link}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="project-card p-4 sm:p-8 rounded-2xl group/cert hover:border-ash-900/50 dark:hover:border-ash-100/50 transition-all duration-300 block text-center"
-                    >
-                      <div className="flex flex-col items-center space-y-6">
-                        <div className="w-16 h-16 rounded-full bg-ash-100 dark:bg-ash-800 flex items-center justify-center text-3xl group-hover/cert:scale-110 group-hover/cert:rotate-12 transition-all duration-500 shadow-inner">
-                          📜
-                        </div>
-                        <div>
-                          <h4 className="font-bold text-ash-900 dark:text-ash-100 text-lg leading-tight mb-2 group-hover/cert:text-ash-600 dark:group-hover/cert:text-ash-400 transition-colors">
-                            {cert.name}
-                          </h4>
-                          <p className="text-xs text-ash-500 uppercase tracking-widest font-medium">{cert.issuer}</p>
-                        </div>
-                      </div>
-                    </a>
-                  ))}
-                </div>
-              </div>
-
-              {/* LeetCode Stats Card */}
-              <div className="project-card rounded-2xl p-6 mt-12 bg-gradient-to-br from-ash-50 to-ash-100 dark:from-ash-900/40 dark:to-ash-800/40 border-ash-200 dark:border-ash-700/50">
-                <div className="flex items-center justify-between mb-6">
-                  <h4 className="font-bold flex items-center gap-2">
-                    <svg className="w-5 h-5 text-orange-500" viewBox="0 0 24 24" fill="currentColor"><path d="M13.483 0a1.374 1.374 0 0 0 -.961.414l-4.377 4.406 4.377 4.406a1.374 1.374 0 1 0 1.922 -1.962l-2.45-2.428 2.45-2.427a1.374 1.374 0 0 0 -.961-2.41zm-6.966 4.406a1.374 1.374 0 0 0 -1.374 1.374V15a1.374 1.374 0 0 0 .961 1.312l4.377 1.403v-4.406a1.374 1.374 0 1 0 -2.748 0v2.428l-2.45-.786V5.78a1.374 1.374 0 0 0 -1.14 -.1.403L6.517 4.406zM24 13.483a1.374 1.374 0 0 0 -.414-.961l-4.406-4.377-4.406 4.377a1.374 1.374 0 1 0 1.962 1.922l2.428-2.45 2.427 2.45A1.374 1.374 0 0 0 24 13.483zM0 13.483a1.374 1.374 0 0 0 .414.961l4.406 4.377 4.406-4.377a1.374 1.374 0 1 0 -1.962-1.922l-2.428 2.45-2.427-2.45A1.374 1.374 0 0 0 0 13.483z" /></svg>
-                    LeetCode Stats
-                  </h4>
-                  <a
-                    href="https://leetcode.com/u/GANGA_BHARATH/"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-xs font-mono text-ash-500 hover:text-orange-500 transition-colors"
-                  >
-                    @GANGA_BHARATH
-                  </a>
-                </div>
-                <div className="grid grid-cols-3 gap-4">
-                  <div className="text-center">
-                    <div className="text-2xl font-bold text-green-500"><AnimatedCounter value={leetcodeStats.easy} /></div>
-                    <div className="text-xs text-ash-500 uppercase tracking-wider mt-1">Easy</div>
-                  </div>
-                  <div className="text-center border-x border-ash-200 dark:border-ash-800">
-                    <div className="text-2xl font-bold text-yellow-500"><AnimatedCounter value={leetcodeStats.medium} /></div>
-                    <div className="text-xs text-ash-500 uppercase tracking-wider mt-1">Medium</div>
-                  </div>
-                  <div className="text-center">
-                    <div className="text-2xl font-bold text-red-500"><AnimatedCounter value={leetcodeStats.hard} /></div>
-                    <div className="text-xs text-ash-500 uppercase tracking-wider mt-1">Hard</div>
-                  </div>
-                </div>
-              </div>
-
-              {/* Digital Toolkit */}
-              <div className="mt-12">
-                <h3 className="text-xl font-bold text-ash-900 dark:text-ash-100 mb-6 tracking-tight">Digital Toolkit</h3>
-                <div className="grid grid-cols-4 gap-3">
-                  {digitalToolkit.map((tool) => (
-                    <div key={tool.name} className="project-card p-4 rounded-xl flex flex-col items-center gap-2 group/tool">
-                      <span className="text-2xl group-hover/tool:scale-110 group-hover/tool:rotate-12 transition-all">{tool.icon}</span>
-                      <span className="text-[10px] font-bold uppercase tracking-widest text-ash-500">{tool.name}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              {/* GitHub Contribution Calendar */}
-              <div className="project-card rounded-2xl p-6 mt-12 bg-ash-900 border border-ash-800 overflow-hidden relative group/gh">
-                <div className="flex items-center justify-between mb-8">
-                  <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center">
-                      <svg className="w-5 h-5 text-white" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z" /></svg>
-                    </div>
-                    <div>
-                      <h4 className="font-bold text-sm text-white">GitHub Productivity</h4>
-                      <p className="text-[10px] text-white/40 uppercase tracking-widest font-mono">Live Activity Sync</p>
-                    </div>
-                  </div>
-                  <div className="text-right">
-                    <div className="text-2xl font-bold font-mono text-white"><AnimatedCounter value={githubStats.repos} /></div>
-                    <div className="text-[10px] text-white/40 uppercase tracking-widest mt-1">Repositories</div>
-                  </div>
-                </div>
-                <div className="w-full overflow-x-auto pb-2 scrollbar-thin scrollbar-thumb-ash-700 scrollbar-track-transparent">
-                  <div className="min-w-[700px]">
-                    <GitHubCalendar
-                      username="bharath-ganga"
-                      colorScheme="dark"
-                      blockSize={12}
-                      blockMargin={4}
-                      fontSize={12}
-                    />
-                  </div>
-                </div>
-              </div>
-
-              {/* Hobbies Section */}
-              <div className="mt-12">
-                <h3 className="text-xl font-bold text-ash-900 dark:text-ash-100 mb-6">Interests & Hobbies</h3>
-                <div className="flex flex-wrap gap-3">
-                  {hobbies.map((hobby) => (
-                    <span key={hobby.name} className="skill-tag px-4 py-2 rounded-xl text-xs flex items-center gap-2">
-                      <span>{hobby.icon}</span>
-                      {hobby.name}
-                    </span>
-                  ))}
-                </div>
-              </div>
-            </div>
+      <section id="about" className="about section-pad">
+        <SectionHeading eyebrow="01 / About" title="Curious by nature. Intentional by design." />
+        <div className="about-grid">
+          <div className="about-intro"><p className="large-copy">I enjoy the whole process—understanding the problem, shaping the experience, and engineering the system behind it.</p><p>My work sits where full-stack development, applied AI, and cybersecurity meet. I care about building software that feels simple on the surface and stays dependable underneath.</p>
+            <div className="social-row">{socialLinks.map(({ label, href, icon: Icon }) => <a key={label} href={href} target={href.startsWith('http') ? '_blank' : undefined} rel="noreferrer" aria-label={label}><Icon size={19} /><span>{label}</span><ArrowUpRight size={15} /></a>)}</div>
           </div>
+          <div className="journey"><p className="mini-title">Education</p>{educationHistory.map((item) => <article key={item.degree} className="timeline-item"><span className={item.current ? 'active' : ''} /><div><p>{item.period}</p><h3>{item.degree}</h3><small>{item.institution}</small></div></article>)}</div>
         </div>
+        <div className="principles-grid"><article><span>01</span><Sparkles /><h3>Purposeful experiences</h3><p>Interfaces with strong hierarchy, useful motion, and zero visual clutter.</p></article><article><span>02</span><Code2 /><h3>Reliable engineering</h3><p>Maintainable systems built around clean decisions and sensible tradeoffs.</p></article><article><span>03</span><ShieldCheck /><h3>Security-minded</h3><p>Privacy and resilience considered from the first line, not added at the end.</p></article></div>
       </section>
 
-      {/* Projects Section */}
-      <section id="projects" className="py-24 reveal-hidden">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-6">
-            <h2 className="text-4xl lg:text-5xl font-bold text-ash-900 dark:text-ash-100 tracking-tight">
-              <span className="text-gradient">Featured</span> <br />
-              <span className="text-ash-600 dark:text-ash-400">Projects</span>
-            </h2>
-            <p className="max-w-md text-ash-600 dark:text-ash-400">
-              A collection of digital products and research projects focusing on AI, security, and user experience.
-            </p>
+      <section id="projects" className="projects section-pad">
+        <SectionHeading eyebrow="02 / Selected work" title="Projects built to solve real problems." copy="A mix of product engineering, applied AI, and security research." />
+        <div className="project-list">{projects.map((project, index) => <article className={`project-row ${index % 2 ? 'project-row-reverse' : ''}`} key={project.title}>
+          <button className="project-image" onClick={() => setSelectedProject(project)} aria-label={`View ${project.title} details`}><img src={project.image} alt={`${project.title} project interface`} /><span>View case study <ArrowUpRight size={18} /></span></button>
+          <div className="project-content"><p className="project-number">0{index + 1} / 0{projects.length}</p>{project.featured && <div className="featured-label">Featured project</div>}<h3>{project.title}</h3><p>{project.description}</p><div className="tag-list">{project.skills.map((skill) => <span key={skill}>{skill}</span>)}</div>
+            <div className="project-links"><button onClick={() => setSelectedProject(project)}>Project details <ArrowUpRight size={16} /></button>{project.demo && <a href={project.demo} target="_blank" rel="noreferrer">Live site <ExternalLink size={15} /></a>}{project.github && <a href={project.github} target="_blank" rel="noreferrer">Source <GitBranch size={15} /></a>}</div>
           </div>
-
-          <div className="space-y-20">
-            {/* WearYourStyle - Featured */}
-            <div className="group grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-center">
-              <div
-                onClick={() => setSelectedProject({
-                  title: 'WearYourStyle',
-                  description: 'An AI-Powered Fashion Marketplace featuring real-time virtual try-on. Used MediaPipe and OpenCV to overlay garments on user pose data with high precision.',
-                  image: '/projects-wear.png',
-                  skills: ['React', 'Node.js', 'Python', 'OpenCV', 'MediaPipe'],
-                  github: 'https://github.com/bharath-ganga/WearYourStyle-new',
-                  demo: 'https://wear-your-style.vercel.app',
-                  details: [
-                    'Real-time virtual try-on capability using OpenCV and MediaPipe',
-                    'Full-stack architecture with React frontend and Node.js backend',
-                    'High precision pose detection for accurate garment mapping',
-                    'Integrated secure payment and user authentication'
-                  ]
-                })}
-                className="col-span-1 lg:col-span-7 overflow-hidden rounded-2xl project-card h-48 sm:h-72 lg:h-[400px] block relative cursor-pointer"
-              >
-                <img
-                  src="/projects-wear.png"
-                  alt="WearYourStyle Preview"
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
-                />
-                <div className="absolute inset-0 bg-ash-900/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                  <div className="px-6 py-3 bg-white/10 backdrop-blur-md rounded-full text-white font-bold border border-white/20 shadow-lg">
-                    View Project Details
-                  </div>
-                </div>
-              </div>
-              <div className="col-span-1 lg:col-span-5 space-y-6">
-                <div className="text-sm font-bold text-ash-500 uppercase tracking-widest">Featured Project</div>
-                <h3 className="text-3xl font-bold text-ash-900 dark:text-ash-100">
-                  WearYourStyle
-                </h3>
-                <p className="text-lg text-ash-600 dark:text-ash-400 leading-relaxed">
-                  An AI-Powered Fashion Marketplace featuring real-time virtual try-on.
-                  Used MediaPipe and OpenCV to overlay garments on user pose data with high precision.
-                </p>
-                <div className="flex flex-wrap gap-2">
-                  {['React', 'Node.js', 'Python', 'OpenCV', 'MediaPipe'].map(skill => (
-                    <span key={skill} className="skill-tag px-3 py-1 rounded-full text-xs">{skill}</span>
-                  ))}
-                </div>
-                <div className="flex items-center gap-6 pt-4">
-                  <a
-                    href="https://github.com/bharath-ganga/WearYourStyle-new"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-center gap-2 text-sm font-bold opacity-60 hover:opacity-100 transition-opacity hover:text-ash-900 dark:hover:text-ash-100"
-                  >
-                    <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z" /></svg>
-                    GITHUB →
-                  </a>
-                  <a
-                    href="https://wear-your-style.vercel.app"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-center gap-2 text-sm font-bold opacity-60 hover:opacity-100 transition-opacity hover:text-ash-900 dark:hover:text-ash-100"
-                  >
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 6H6a2 2 0 0 0 -2 2v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-4M14 4h6m0 0v6m0 -6L10 14" /></svg>
-                    LIVE DEMO →
-                  </a>
-                </div>
-              </div>
-            </div>
-
-            {/* Grid for other projects */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-12">
-              {/* Expense Tracker */}
-              <div className="space-y-6 group">
-                <div
-                  onClick={() => setSelectedProject({
-                    title: 'Expense Tracker',
-                    description: 'A full-stack finance tracking app with automated categorization and insightful dashboard visualizations.',
-                    image: '/projects-expense.png',
-                    skills: ['React', 'Node.js', 'MongoDB', 'Express', 'Chart.js'],
-                    github: 'https://github.com/bharath-ganga/expensivetracker_intern.git',
-                    demo: 'https://expensivetracker-teal.vercel.app/',
-                    details: [
-                      'Interactive dashboard with spending visualizations',
-                      'Automated expense categorization',
-                      'REST API built with Node.js and Express',
-                      'Secure data storage with MongoDB'
-                    ]
-                  })}
-                  className="h-64 rounded-2xl project-card overflow-hidden block relative cursor-pointer"
-                >
-                  <img
-                    src="/projects-expense.png"
-                    alt="Expense Tracker Preview"
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
-                  />
-                  <div className="absolute inset-0 bg-ash-900/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                    <span className="px-4 py-2 bg-white/10 backdrop-blur-md rounded-full text-white text-sm font-bold border border-white/20 shadow-lg">
-                      View Project Details
-                    </span>
-                  </div>
-                </div>
-                <h3 className="text-2xl font-bold text-ash-900 dark:text-ash-100">Expense Tracker</h3>
-                <p className="text-ash-600 dark:text-ash-400">
-                  A full-stack finance tracking app with automated categorization and insightful dashboard visualizations.
-                </p>
-                <div className="flex items-center gap-6">
-                  <a
-                    href="https://github.com/bharath-ganga/expensivetracker_intern.git"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-center gap-2 text-sm font-bold opacity-60 hover:opacity-100 transition-opacity hover:text-ash-900 dark:hover:text-ash-100"
-                  >
-                    <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z" /></svg>
-                    GITHUB →
-                  </a>
-                  <a
-                    href="https://expensivetracker-teal.vercel.app/"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-center gap-2 text-sm font-bold opacity-60 hover:opacity-100 transition-opacity hover:text-ash-900 dark:hover:text-ash-100"
-                  >
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 6H6a2 2 0 0 0 -2 2v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-4M14 4h6m0 0v6m0 -6L10 14" /></svg>
-                    LIVE DEMO →
-                  </a>
-                </div>
-              </div>
-
-              {/* SDN DDoS Detection */}
-              <div className="space-y-6 group">
-                <div
-                  onClick={() => setSelectedProject({
-                    title: 'SDN DDoS Detection',
-                    description: 'Research-based ML model for detecting network attacks in software-defined network architectures.',
-                    image: '/projects-cyber.png',
-                    skills: ['Python', 'Machine Learning', 'SDN', 'Networking', 'Scikit-learn'],
-                    github: 'https://github.com/bharath-ganga/ML-Based-SDN-DDoS-Detection',
-                    demo: null,
-                    details: [
-                      'Implemented multiple ML classifiers for network traffic analysis',
-                      'Designed to work within Software-Defined Networking controllers',
-                      'High accuracy in distinguishing legitimate traffic from DDoS floods',
-                      'Comprehensive research on network security architectures'
-                    ]
-                  })}
-                  className="h-64 rounded-2xl project-card overflow-hidden block relative cursor-pointer"
-                >
-                  <img
-                    src="/projects-cyber.png"
-                    alt="Cybersecurity Research Preview"
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
-                  />
-                  <div className="absolute inset-0 bg-ash-900/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                    <span className="px-4 py-2 bg-white/10 backdrop-blur-md rounded-full text-white text-sm font-bold border border-white/20 shadow-lg">
-                      View Project Details
-                    </span>
-                  </div>
-                </div>
-                <h3 className="text-2xl font-bold text-ash-900 dark:text-ash-100">SDN DDoS Detection</h3>
-                <p className="text-ash-600 dark:text-ash-400">
-                  Research-based ML model for detecting network attacks in software-defined network architectures.
-                </p>
-                <div className="flex items-center gap-4">
-                  <a
-                    href="https://github.com/bharath-ganga/ML-Based-SDN-DDoS-Detection"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-center gap-2 text-sm font-bold opacity-60 hover:opacity-100 transition-opacity hover:text-ash-900 dark:hover:text-ash-100"
-                  >
-                    <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z" /></svg>
-                    GITHUB →
-                  </a>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+        </article>)}</div>
       </section>
 
-      {/* Skills Section */}
-      <section id="skills" className="py-24 bg-white/30 dark:bg-ash-900/30 reveal-hidden">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center max-w-2xl mx-auto mb-16">
-            <h2 className="text-4xl font-bold text-ash-900 dark:text-ash-100 mb-4 tracking-tight">
-              <span className="text-gradient">Technical Skills</span>
-            </h2>
-            <p className="text-ash-600 dark:text-ash-400 text-lg">Tools and languages I use to bring ideas to life.</p>
+      <section id="research" className="research section-pad">
+        <SectionHeading eyebrow="03 / Research work" title="Researching trustworthy AI and secure systems." copy="Academic work across deepfake detection, machine learning, and network security." />
+        <article className="research-paper">
+          <div className="research-meta">
+            <span>2026</span>
+            <span>Deepfake detection</span>
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
-            {technicalSkills.map((cat, i) => (
-              <div key={i} className="project-card p-6 rounded-2xl space-y-4 hover:-translate-y-1 transition-transform duration-300">
-                <h3 className="text-lg font-bold text-ash-900 dark:text-ash-100 border-b border-ash-200 dark:border-ash-800 pb-2">{cat.title}</h3>
-                <div className="flex flex-wrap gap-2">
-                  {cat.skills.map(s => (
-                    <span key={s.name} className="skill-tag px-3 py-1.5 rounded-full text-xs flex items-center gap-2 bg-ash-100/50 dark:bg-ash-800/50 border border-ash-200 dark:border-ash-700 hover:border-ash-400 dark:hover:border-ash-500 transition-colors">
-                      {s.icon && <img src={`https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/${s.icon}`} alt={s.name} className="w-4 h-4 object-contain" />}
-                      {s.name}
-                    </span>
-                  ))}
-                </div>
+          <div className="research-main">
+            <div className="research-icon"><BookOpen size={26} /></div>
+            <div>
+              <h3>Robust Deepfake Video Detection Using CNN-Based Spatial Features and Temporal Consistency Analysis</h3>
+              <p>Designed a deepfake video detection pipeline using <strong>CNN-based spatial feature extraction</strong> and <strong>temporal consistency analysis</strong>, including frame extraction, face detection, feature fusion, data augmentation, and transfer learning.</p>
+              <p>Evaluated the approach on the <strong>FaceForensics++ dataset</strong>. Presented at <strong>IEEE AIDML-2026</strong> in August 2026.</p>
+              <div className="research-links">
+                <a href="https://drive.google.com/file/d/1rRMCW6owiO4J-cat9Dljc5rQigATfmUn/view?usp=sharing" target="_blank" rel="noreferrer"><Award size={17} /> Presentation certificate <ArrowUpRight size={15} /></a>
+                <a href="https://github.com/bharath-ganga/robust-deepfake-video-detection" target="_blank" rel="noreferrer"><GitBranch size={17} /> Research repository <ArrowUpRight size={15} /></a>
               </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Contact Section */}
-      <section id="contact" className="py-16 sm:py-20 lg:py-24 reveal-hidden">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="max-w-4xl mx-auto text-center">
-            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-ash-900 dark:text-ash-100 mb-6 lg:mb-8 tracking-tight">
-              <span className="text-gradient">Get In Touch</span>
-            </h2>
-            <p className="text-lg lg:text-xl text-ash-600 dark:text-ash-400 mb-10 lg:mb-12 leading-relaxed">
-              Interested in collaborating or discussing opportunities? I'm always open to
-              connecting with fellow developers and potential team members.
-            </p>
-
-            {/* Contact Form */}
-            <div className="max-w-2xl mx-auto mb-12">
-              <form onSubmit={handleFormSubmit} className="space-y-6">
-                <div className="grid sm:grid-cols-2 gap-6">
-                  <div>
-                    <input
-                      type="text"
-                      name="name"
-                      placeholder="Your Name"
-                      required
-                      className="w-full px-4 py-3 bg-white dark:bg-ash-800 border border-ash-300 dark:border-ash-700 rounded-lg text-ash-900 dark:text-ash-100 placeholder-ash-500 dark:placeholder-ash-400 focus:outline-none focus:ring-2 focus:ring-ash-600 dark:focus:ring-ash-400 focus:border-transparent transition-colors"
-                    />
-                  </div>
-                  <div>
-                    <input
-                      type="email"
-                      name="email"
-                      placeholder="Your Email"
-                      required
-                      className="w-full px-4 py-3 bg-white dark:bg-ash-800 border border-ash-300 dark:border-ash-700 rounded-lg text-ash-900 dark:text-ash-100 placeholder-ash-500 dark:placeholder-ash-400 focus:outline-none focus:ring-2 focus:ring-ash-600 dark:focus:ring-ash-400 focus:border-transparent transition-colors"
-                    />
-                  </div>
-                </div>
-                <div>
-                  <input
-                    type="text"
-                    name="subject"
-                    placeholder="Subject"
-                    required
-                    className="w-full px-4 py-3 bg-white dark:bg-ash-800 border border-ash-300 dark:border-ash-700 rounded-lg text-ash-900 dark:text-ash-100 placeholder-ash-500 dark:placeholder-ash-400 focus:outline-none focus:ring-2 focus:ring-ash-600 dark:focus:ring-ash-400 focus:border-transparent transition-colors"
-                  />
-                </div>
-                <div>
-                  <textarea
-                    name="message"
-                    rows={6}
-                    placeholder="Your message..."
-                    required
-                    className="w-full px-4 py-3 bg-white dark:bg-ash-800 border border-ash-300 dark:border-ash-700 rounded-lg text-ash-900 dark:text-ash-100 placeholder-ash-500 dark:placeholder-ash-400 focus:outline-none focus:ring-2 focus:ring-ash-600 dark:focus:ring-ash-400 focus:border-transparent transition-colors resize-vertical"
-                  ></textarea>
-                </div>
-                <div className="text-center">
-                  <button
-                    type="submit"
-                    disabled={isSubmitting}
-                    className={`inline-flex items-center justify-center px-8 py-3 rounded-lg font-medium transition-all w-full sm:w-auto ${isSubmitting
-                      ? 'bg-ash-600 text-ash-300 cursor-not-allowed'
-                      : 'bg-ash-900 dark:bg-ash-100 text-ash-50 dark:text-ash-900 hover:bg-ash-800 dark:hover:bg-ash-200'
-                      }`}
-                  >
-                    {isSubmitting ? (
-                      <>
-                        <svg className="animate-spin -ml-1 mr-3 h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 0 1 8 -8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 0 1 4 12H0c0 3.042 1.135 5.824 3 7.938l3 -2.647z"></path>
-                        </svg>
-                        Sending...
-                      </>
-                    ) : (
-                      'Send Message'
-                    )}
-                  </button>
-                </div>
-
-                {/* Success/Error Messages */}
-                {formStatus === 'success' && (
-                  <div className="text-center animate-fadeIn">
-                    <div className="inline-flex items-center px-4 py-2 rounded-lg bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200">
-                      <svg className="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
-                        <path fillRule="evenodd" d="M10 18a8 8 0 1 0 0 -16 8 8 0 0 0 0 16zm3.707 -9.293a1 1 0 0 0 -1.414 -1.414L9 10.586 7.707 9.293a1 1 0 0 0 -1.414 1.414l2 2a1 1 0 0 0 1.414 0l4 -4z" clipRule="evenodd" />
-                      </svg>
-                      Message sent successfully!
-                    </div>
-                  </div>
-                )}
-
-                {formStatus === 'error' && (
-                  <div className="text-center animate-fadeIn">
-                    <div className="inline-flex items-center px-4 py-2 rounded-lg bg-red-100 dark:bg-red-900 text-red-800 dark:text-red-200">
-                      <svg className="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
-                        <path fillRule="evenodd" d="M10 18a8 8 0 1 0 0 -16 8 8 0 0 0 0 16zM8.707 7.293a1 1 0 0 0 -1.414 1.414L8.586 10l-1.293 1.293a1 1 0 1 0 1.414 1.414L10 11.414l1.293 1.293a1 1 0 0 0 1.414 -1.414L11.414 10l1.293 -1.293a1 1 0 0 0 -1.414 -1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
-                      </svg>
-                      Something went wrong. Please try again.
-                    </div>
-                  </div>
-                )}
-              </form>
-            </div>
-
-            {/* Social Links */}
-            <div className="flex flex-col sm:flex-row gap-4 lg:gap-6 justify-center items-center max-w-2xl mx-auto">
-              <a
-                href="mailto:bharathganga7@gmail.com"
-                className="inline-flex items-center justify-center border border-ash-300 dark:border-ash-700 text-ash-900 dark:text-ash-100 px-6 py-3 rounded-lg font-medium hover:bg-ash-100 dark:hover:bg-ash-800 transition-colors w-full sm:w-auto"
-              >
-                Email
-              </a>
-              <a
-                href="https://github.com/bharath-ganga"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center justify-center border border-ash-300 dark:border-ash-700 text-ash-900 dark:text-ash-100 px-6 py-3 rounded-lg font-medium hover:bg-ash-100 dark:hover:bg-ash-800 transition-colors w-full sm:w-auto"
-              >
-                GitHub
-              </a>
-              <a
-                href="https://www.linkedin.com/in/ganga-bharath-a6596b375/"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center justify-center border border-ash-300 dark:border-ash-700 text-ash-900 dark:text-ash-100 px-6 py-3 rounded-lg font-medium hover:bg-ash-100 dark:hover:bg-ash-800 transition-colors w-full sm:w-auto"
-              >
-                LinkedIn
-              </a>
-              <a
-                href="https://leetcode.com/u/GANGA_BHARATH/"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center justify-center border border-ash-300 dark:border-ash-700 text-ash-900 dark:text-ash-100 px-6 py-3 rounded-lg font-medium hover:bg-ash-100 dark:hover:bg-ash-800 transition-colors w-full sm:w-auto"
-              >
-                LeetCode
-              </a>
             </div>
           </div>
-        </div>
+          <aside>
+            <p className="mini-title">Research pipeline</p>
+            <ol>
+              <li><span>01</span>Frame extraction</li>
+              <li><span>02</span>Face detection</li>
+              <li><span>03</span>Spatial feature learning</li>
+              <li><span>04</span>Temporal analysis</li>
+              <li><span>05</span>Feature fusion</li>
+            </ol>
+          </aside>
+        </article>
+        <article className="research-paper research-paper-secondary">
+          <div className="research-meta">
+            <span>Research study</span>
+            <span>Network security</span>
+          </div>
+          <div className="research-main">
+            <div className="research-icon"><ShieldCheck size={26} /></div>
+            <div>
+              <h3>SDN DDoS Detection</h3>
+              <p>Developed a <strong>machine-learning-based detection model</strong> for identifying distributed denial-of-service attacks in software-defined network architectures.</p>
+              <p>Implemented multiple classifiers for network traffic analysis, designed the approach for integration with <strong>SDN controllers</strong>, and studied methods for distinguishing legitimate traffic from DDoS floods.</p>
+              <div className="research-links">
+                <a href="https://github.com/bharath-ganga/ML-Based-SDN-DDoS-Detection" target="_blank" rel="noreferrer"><GitBranch size={17} /> Research repository <ArrowUpRight size={15} /></a>
+              </div>
+            </div>
+          </div>
+          <aside>
+            <p className="mini-title">Research focus</p>
+            <ol>
+              <li><span>01</span>Traffic collection</li>
+              <li><span>02</span>Feature engineering</li>
+              <li><span>03</span>ML classification</li>
+              <li><span>04</span>DDoS detection</li>
+              <li><span>05</span>SDN integration</li>
+            </ol>
+          </aside>
+        </article>
       </section>
 
-      {/* Footer */}
-      <footer className="bg-white dark:bg-ash-900 border-t border-ash-200 dark:border-ash-800">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          <div className="text-center">
-            <p className="text-ash-600 dark:text-ash-400">
-              &copy; {new Date().getFullYear()} Ganga Bharath.
-            </p>
-          </div>
-        </div>
-      </footer>
+      <section className="proof section-pad" aria-labelledby="proof-title">
+        <SectionHeading eyebrow="04 / Proof of work" title="Learning in public, shipping in practice." />
+        <div className="stats-grid"><article><p>GitHub repositories</p><strong><AnimatedCounter value={githubStats.repos} /></strong><span>Public projects and experiments</span></article><article><p>LeetCode solved</p><strong><AnimatedCounter value={totalSolved} /></strong><span>{leetcodeStats.easy} easy · {leetcodeStats.medium} medium · {leetcodeStats.hard} hard</span></article><article><p>GitHub contributions</p><strong><AnimatedCounter value={githubStats.commits} />+</strong><span>Consistent hands-on practice</span></article></div>
+        <div className="github-board"><div className="board-header"><div><GitBranch size={20} /><span>Contribution activity</span></div><a href="https://github.com/bharath-ganga" target="_blank" rel="noreferrer">View GitHub <ArrowUpRight size={15} /></a></div><div className="calendar-wrap"><GitHubCalendar username="bharath-ganga" colorScheme="dark" blockSize={12} blockMargin={5} fontSize={12} /></div></div>
+      </section>
 
-      {/* Project Modal */}
-      <AnimatePresence>
-        {selectedProject && (
-          <motion.div 
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm"
-            onClick={() => setSelectedProject(null)}
-          >
-            <motion.div 
-              initial={{ scale: 0.95, opacity: 0, y: 20 }}
-              animate={{ scale: 1, opacity: 1, y: 0 }}
-              exit={{ scale: 0.95, opacity: 0, y: 20 }}
-              onClick={(e) => e.stopPropagation()}
-              className="bg-ash-900 border border-ash-800 rounded-3xl overflow-hidden max-w-4xl w-full max-h-[90vh] overflow-y-auto shadow-2xl relative"
-            >
-              <button 
-                onClick={() => setSelectedProject(null)}
-                className="absolute top-4 right-4 p-2 bg-black/50 text-white rounded-full hover:bg-black/80 transition-colors z-10"
-              >
-                <X className="w-5 h-5" />
-              </button>
-              <div className="relative h-64 sm:h-80">
-                <img src={selectedProject.image} alt={selectedProject.title} className="w-full h-full object-cover" />
-                <div className="absolute inset-0 bg-gradient-to-t from-ash-900 to-transparent"></div>
-                <div className="absolute bottom-6 left-6 right-6">
-                  <h3 className="text-3xl font-bold text-white mb-2">{selectedProject.title}</h3>
-                  <div className="flex flex-wrap gap-2">
-                    {selectedProject.skills.map((s: string) => <span key={s} className="px-3 py-1 bg-ash-800/80 text-white text-xs rounded-full border border-ash-700">{s}</span>)}
-                  </div>
-                </div>
-              </div>
-              <div className="p-6 sm:p-8 space-y-8">
-                <div>
-                  <h4 className="text-lg font-bold text-white mb-3 flex items-center gap-2">
-                    <MonitorPlay className="w-5 h-5 text-ash-400" />
-                    Overview
-                  </h4>
-                  <p className="text-ash-400 leading-relaxed">{selectedProject.description}</p>
-                </div>
-                {selectedProject.details && (
-                  <div>
-                    <h4 className="text-lg font-bold text-white mb-3 flex items-center gap-2">
-                      <Music className="w-5 h-5 text-ash-400" />
-                      Key Features
-                    </h4>
-                    <ul className="list-disc pl-5 text-ash-400 space-y-2 marker:text-ash-600">
-                      {selectedProject.details.map((d: string, i: number) => <li key={i}>{d}</li>)}
-                    </ul>
-                  </div>
-                )}
-                <div className="flex gap-4 pt-4 border-t border-ash-800">
-                  {selectedProject.github && (
-                    <a href={selectedProject.github} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 px-6 py-3 bg-ash-800 text-white rounded-xl hover:bg-ash-700 transition-colors font-medium">
-                      <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z" /></svg>
-                      Source Code
-                    </a>
-                  )}
-                  {selectedProject.demo && (
-                    <a href={selectedProject.demo} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 px-6 py-3 bg-white text-black rounded-xl hover:bg-ash-200 transition-colors font-medium hover:scale-105">
-                      <ExternalLink className="w-5 h-5" />
-                      Live Demo
-                    </a>
-                  )}
-                </div>
-              </div>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </div>
-  )
+      <section id="skills" className="skills section-pad">
+        <SectionHeading eyebrow="05 / Capabilities" title="A practical toolkit for modern products." copy="Technologies I use to move from a rough idea to a dependable release." />
+        <div className="skill-grid">{technicalSkills.map((category, index) => <article key={category.title} className="skill-card"><div><span>0{index + 1}</span><h3>{category.title}</h3></div><ul>{category.skills.map((skill) => <li key={skill.name}>{skill.icon ? <img src={`https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/${skill.icon}`} alt="" /> : <span className="skill-dot" />}{skill.name}</li>)}</ul></article>)}</div>
+        <div className="lab-grid"><div><p className="mini-title">Try the terminal</p><h3>A small interactive corner.</h3><p>Type <code>help</code> to explore a few commands and learn more about what I'm working on.</p><InteractiveTerminal /></div><div className="toolkit-column"><div><p className="mini-title">Everyday toolkit</p><div className="simple-tags">{digitalToolkit.map((tool) => <span key={tool.name}>{tool.icon} {tool.name}</span>)}</div></div><div><p className="mini-title">Away from the editor</p><div className="simple-tags">{hobbies.map((item) => <span key={item.name}>{item.icon} {item.name}</span>)}</div></div></div></div>
+      </section>
+
+      <section className="certifications section-pad"><SectionHeading eyebrow="06 / Credentials" title="Always learning. Always sharpening the craft." /><div className="cert-list">{certifications.map((certification, index) => <a key={certification.name} href={certification.link} target="_blank" rel="noreferrer"><span>0{index + 1}</span><div><h3>{certification.name}</h3><p>{certification.issuer}</p></div><ArrowUpRight size={20} /></a>)}</div></section>
+
+      <section id="contact" className="contact section-pad">
+        <div className="contact-copy"><p className="eyebrow"><span>07 / Contact</span></p><h2>Have something worth building?</h2><p>I'm open to internships, product collaborations, and ambitious ideas. Tell me what you're working on.</p><a href="mailto:bharathganga7@gmail.com">bharathganga7@gmail.com <ArrowUpRight size={18} /></a></div>
+        <form className="contact-form" onSubmit={handleFormSubmit}><div className="form-row"><label><span>Your name</span><input name="name" type="text" placeholder="Jane Smith" required /></label><label><span>Email address</span><input name="email" type="email" placeholder="jane@company.com" required /></label></div><label><span>What are you thinking about?</span><input name="subject" type="text" placeholder="A new product, role, or collaboration" required /></label><label><span>Tell me a little more</span><textarea name="message" rows={5} placeholder="Project context, goals, timeline..." required /></label><div className="form-footer"><p>I usually reply within 1–2 days.</p><button className="button button-light" type="submit" disabled={isSubmitting}>{isSubmitting ? 'Sending…' : 'Send message'} <Send size={16} /></button></div>{formStatus && <p className={`form-message ${formStatus}`} role="status">{formStatus === 'success' ? <><CheckCircle2 size={17} /> Message sent—I'll get back to you soon.</> : 'Something went wrong. Please try again or email me directly.'}</p>}</form>
+      </section>
+    </main>
+
+    <footer><div><span className="brand-mark">GB</span><p>Designed and built by Ganga Bharath.</p></div><p>© {new Date().getFullYear()} · India</p><a href="#top">Back to top <ArrowUpRight size={15} /></a></footer>
+
+    <AnimatePresence>{selectedProject && <motion.div className="modal-backdrop" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setSelectedProject(null)}><motion.article className="project-modal" initial={{ y: 30, opacity: 0 }} animate={{ y: 0, opacity: 1 }} exit={{ y: 30, opacity: 0 }} transition={{ type: 'spring', damping: 28, stiffness: 300 }} onClick={(event) => event.stopPropagation()} role="dialog" aria-modal="true" aria-label={`${selectedProject.title} details`}><button className="modal-close" onClick={() => setSelectedProject(null)} aria-label="Close project details"><X size={21} /></button><div className="modal-image"><img src={selectedProject.image} alt={`${selectedProject.title} project`} /></div><div className="modal-content"><p className="eyebrow"><span>Project case study</span></p><h2>{selectedProject.title}</h2><p className="modal-description">{selectedProject.description}</p><div className="tag-list">{selectedProject.skills.map((skill) => <span key={skill}>{skill}</span>)}</div>{selectedProject.details && <ul>{selectedProject.details.map((detail) => <li key={detail}><CheckCircle2 size={17} />{detail}</li>)}</ul>}<div className="modal-actions">{selectedProject.demo && <a className="button button-primary" href={selectedProject.demo} target="_blank" rel="noreferrer">View live site <ExternalLink size={16} /></a>}{selectedProject.github && <a className="button button-secondary" href={selectedProject.github} target="_blank" rel="noreferrer">Source code <GitBranch size={16} /></a>}</div></div></motion.article></motion.div>}</AnimatePresence>
+  </div>
 }
-
-
-
-
-
-
-
-
-
-
-
-
 
 export default App

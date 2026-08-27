@@ -30,31 +30,14 @@ export function InteractiveTerminal() {
   };
 
   return (
-    <div
-      className="bg-ash-900 border-x border-b border-ash-700 p-4 font-mono text-xs text-green-500 h-48 overflow-y-auto rounded-b-xl scrollbar-hide"
-      onClick={() => document.getElementById('term-input')?.focus()}
-    >
-      {history.map((item, i) => (
-        <div key={i} className="mb-2">
-          <div className="flex gap-2">
-            <span className="text-ash-500">➜</span>
-            <span className="text-ash-100">{item.cmd}</span>
-          </div>
-          <div className="text-ash-400 mt-1 pl-4 break-words">{item.output}</div>
-        </div>
-      ))}
-      <form onSubmit={handleCommand} className="flex gap-2">
-        <span className="text-ash-500">➜</span>
-        <input
-          id="term-input"
-          type="text"
-          value={input}
-          onChange={(e) => setInput(e.target.value)}
-          className="bg-transparent border-none outline-none text-ash-100 flex-1"
-          autoComplete="off"
-          spellCheck="false"
-        />
-      </form>
+    <div className="terminal">
+      <div className="terminal-bar"><div className="terminal-dots"><span /><span /><span /></div><span>ganga@portfolio ~</span></div>
+      <div className="terminal-body" onClick={() => document.getElementById('term-input')?.focus()}>
+        {history.map((item, i) => <div key={i} className="terminal-entry"><div className="terminal-command">{item.cmd}</div><div className="terminal-output">{item.output}</div></div>)}
+        <form onSubmit={handleCommand} className="terminal-form">
+          <input id="term-input" aria-label="Terminal command" type="text" value={input} onChange={(e) => setInput(e.target.value)} autoComplete="off" spellCheck="false" />
+        </form>
+      </div>
     </div>
   );
 }
