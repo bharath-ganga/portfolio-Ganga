@@ -3,6 +3,11 @@ export interface Project {
   description: string;
   image: string;
   skills: string[];
+  problem: string;
+  solution: string;
+  outcome: string;
+  architecture: string[];
+  metrics?: { value: string; label: string }[];
   github?: string | null;
   demo?: string | null;
   details?: string[];
